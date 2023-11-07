@@ -1,0 +1,8 @@
+{
+    "data_dir": "data/PAYSLIPS",
+    "input_format": ["text_and_box_and_image"],
+    "preprocessing": {
+        "normalize_text": true,
+        "image_resize": [224, 224]
+    }
+}

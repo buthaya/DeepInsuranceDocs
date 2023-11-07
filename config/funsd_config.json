@@ -1,0 +1,4 @@
+{
+    "data_dir": "data/FUNSD",
+    "input_format": ["text_and_boxes"]
+}
