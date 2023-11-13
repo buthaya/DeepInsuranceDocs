@@ -1,2 +1,19 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+.vscode/*
+.mypy_cache/*
+.idea/*
+
+# Distribution / packaging
 .env/*
+
+# Datasets
 data/*
+
+# Network certificates
+cert/*
+
+# Outputs of model training
+models/layoutlm/outputs
+models/layoutlmv3/outputs

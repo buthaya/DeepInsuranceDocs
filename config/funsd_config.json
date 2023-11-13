@@ -1,4 +1,12 @@
 {
     "data_dir": "data/FUNSD",
-    "input_format": ["text_and_boxes"]
+    "input_format": "text_and_boxes",
+    "preprocessing":{
+        "tagging_scheme": "BIOES"
+    },
+    "label_list":{
+        "0": "O",
+        "1": "QUESTION",
+        "2": "ANSWER",
+        "3": "HEADER"}
 }
