@@ -82,15 +82,15 @@ def label_dict_to_bio(label_dict):
     return new_label_dict
 
 
-def label_dict_to_bioes(label_dict):
+def label_dict_to_bieso(label_dict):
     """
-    Converts a dictionary of labels to a dictionary of BIOES tags.
+    Converts a dictionary of labels to a dictionary of BIESO tags.
 
     Args:
         label_dict (dict): A dictionary of labels.
 
     Returns:
-        dict: A dictionary of BIOES tags.
+        dict: A dictionary of BIESO tags.
     """
     new_label_dict = {0: "O"}
     i = 1
@@ -106,15 +106,15 @@ def label_dict_to_bioes(label_dict):
 
 def label_dict_transform(label_dict, scheme):
     """
-    Transforms a list of labels to a dictionary of BIO or BIOES tags.
+    Transforms a list of labels to a dictionary of BIO or BIESO tags.
 
     Args:
         label_dict (list): A dict of labels.
-        scheme (str): The tagging scheme to use. Either 'BIO' or 'BIOES'.
+        scheme (str): The tagging scheme to use. Either 'BIO' or 'BIESO'.
 
     Returns:
-        dict: A dictionary of BIO or BIOES tags.
+        dict: A dictionary of BIO or BIESO tags.
     """
     if scheme == 'BIO':
         return label_dict_to_bio(label_dict)
-    return label_dict_to_bioes(label_dict)
+    return label_dict_to_bieso(label_dict)

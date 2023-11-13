@@ -20,25 +20,26 @@ def sequence_to_bio(sequence):
     return bio_sequence
 
 
-def sequence_to_bioes(sequence):
+def sequence_to_bieso(sequence):
     """
     Converts a sequence of labels to BIESO format.
     """
-    bioes_sequence = []
+    bieso_sequence = []
     for i, label in enumerate(sequence):
         if label == 'O':  # Outside any entity
-            bioes_sequence.append('O')
+            bieso_sequence.append('O')
         elif i > 0 and sequence[i-1] == label:  # Inside an entity
             if i < len(sequence) - 1 and sequence[i+1] == label:
-                bioes_sequence.append('I-' + label)
+                bieso_sequence.append('I-' + label)
             else:
-                bioes_sequence.append('E-' + label)
+                bieso_sequence.append('E-' + label)
         else:  # Beginning of an entity or single-entity
             if i < len(sequence) - 1 and sequence[i+1] == label:
-                bioes_sequence.append('B-' + label)
+                bieso_sequence.append('B-' + label)
             else:
-                bioes_sequence.append('S-' + label)
-    return bioes_sequence
+                bieso_sequence.append('S-' + label)
+    return bieso_sequence
+
 
 def convert_sequence_to_tags(sequence, tagging_scheme):
     """
@@ -46,8 +47,7 @@ def convert_sequence_to_tags(sequence, tagging_scheme):
     """
     if tagging_scheme == 'BIO':
         return sequence_to_bio(sequence)
-    elif tagging_scheme == 'BIOES':
-        return sequence_to_bioes(sequence)
+    elif tagging_scheme == 'BIESO':
+        return sequence_to_bieso(sequence)
     else:
         raise ValueError(f'Invalid tagging scheme: {tagging_scheme}.')
-

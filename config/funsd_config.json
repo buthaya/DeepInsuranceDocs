@@ -2,7 +2,7 @@
     "data_dir": "data/FUNSD",
     "input_format": "text_and_boxes",
     "preprocessing":{
-        "tagging_scheme": "BIOES"
+        "tagging_scheme": "BIESO"
     },
     "label_list":{
         "0": "O",
