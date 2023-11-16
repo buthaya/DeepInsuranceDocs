@@ -49,7 +49,7 @@ def main():
     # Debug parameters
     config_path = 'config/funsd_config.json'
     pretrained_model = 'microsoft/layoutlm-base-uncased'
-    batch_size = 80
+    batch_size = 8
     num_train_epochs = 2
     learning_rate = 5e-5
 
@@ -115,8 +115,7 @@ def main():
         log_dir=f"{save_model_path}/outputs/runs/{log_file[6:]}/test")
     writers = {'train': writer_train, 'test': writer_test}
 
-    csv_data = {'train': [], 'test': [],
-                'f1-score': [], 'precision': [], 'recall': []}
+    csv_data = {'train': [], 'test': [], 'accuracy': []}
 
     # --------------------------------------- Training ------------------------------------- #
     for epoch in range(num_train_epochs):
@@ -174,7 +173,7 @@ def main():
                 # Write the header row to the CSV file
                 csv_writer.writerow([iteration_number, loss_value])
 
-    for metric in ['f1-score', 'precision', 'recall']:
+    for metric in ['accuracy']:
         csv_path = f"runs/{args.log_file[6:]}/train/{metric}.csv"
         with open(csv_path, mode='w', newline='', encoding='utf-8') as csv_file:
             csv_writer = csv.writer(csv_file)

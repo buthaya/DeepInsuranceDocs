@@ -113,8 +113,9 @@ class LayoutLMDataPreparationMVLM(LayoutLMDataPreparation):
             # Add labels which are the tokens' input_ids
             encoding["labels"] = encoding["input_ids"]
 
-            # Apply random masking
-            encoding["input_ids"], encoding["labels"] = self.mask_encoding(encoding["input_ids"],
+            # Apply random masking on input_ids but not on labels. The labels are the input_ids. This will make
+            # evaluation easier.
+            encoding["input_ids"], _ = self.mask_encoding(encoding["input_ids"],
                                                                            encoding["labels"],
                                                                            self.tokenizer,
                                                                            mask_proba=self.mask_proba,

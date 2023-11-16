@@ -4,6 +4,8 @@ import numpy as np
 import torch
 from seqeval.metrics import (classification_report, f1_score, precision_score,
                              recall_score)
+from seqeval.scheme import Token
+from sklearn.metrics import accuracy_score as sklearn_accuracy_score
 from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
 import torch
@@ -61,14 +63,17 @@ def train_epoch(model: LayoutLMForTokenClassification, train_dataloader: DataLoa
         preds = np.argmax(logits, axis=2)
         out_label_ids = labels.detach().cpu().numpy()
 
-        precision = precision_score(out_label_ids, preds)
+        out_label_ids = out_label_ids.tolist()
+        preds = preds.tolist()
+
+        accuracy = np.mean([sklearn_accuracy_score(out_label_ids[i], preds[i]) for i in range(len(preds))])
 
         writer_train.add_scalar("Loss/check", loss, global_step=global_step)
-        writer_train.add_scalar("total/precision/train",
-                                precision, global_step=global_step)
+        writer_train.add_scalar("total/accuracy/train",
+                                accuracy, global_step=global_step)
 
         csv_data['train'].append((global_step, float(loss)))
-        csv_data['precision'].append((global_step, float(precision)))
+        csv_data['accuracy'].append((global_step, float(accuracy)))
 
         # ---------------------------------- Optimizer update ---------------------------------- #
         optimizer.step()
@@ -145,7 +150,7 @@ def eval(model: LayoutLMForTokenClassification, eval_dataloader: DataLoader,
 
     results = {
         'loss': eval_loss,
-        'precision': precision_score(out_label_ids, preds),
+        'accuracy': sklearn_accuracy_score(out_label_ids, preds),
     }
 
     # ------------------------------------- Logs update ------------------------------------ #
@@ -161,7 +166,6 @@ def eval(model: LayoutLMForTokenClassification, eval_dataloader: DataLoader,
         #     f'Document Exact Match = {doc_ex_match_metric} on {len(out_label_ids)} documents')
 
     return eval_loss
-
 
 def layoutlm_collate_fn(batch):
     """
