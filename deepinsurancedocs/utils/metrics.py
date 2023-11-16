@@ -2,7 +2,7 @@
 from typing import List
 
 
-def doc_exact_match(y_pred_list: List, y_true_list: List) -> dict:
+def doc_exact_match(y_true_list: List, y_pred_list: List) -> dict:
     """ 
     Gives the number of documents that have 100% accuracy. 
     We assume that the predictions and labels are given by word.

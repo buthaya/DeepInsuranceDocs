@@ -54,39 +54,17 @@ def train_epoch(model: LayoutLMForTokenClassification, train_dataloader: DataLoa
         loss.backward()
 
         # ------------------------------------- Logs update ------------------------------------ #
-        label_map = dict(enumerate(LABEL_LIST))
         pad_token_label_id = CrossEntropyLoss().ignore_index
         writer_train = writers['train']
 
         logits = outputs.logits.detach().cpu().numpy()
+        preds = np.argmax(logits, axis=2)
         out_label_ids = labels.detach().cpu().numpy()
 
-        preds = np.argmax(logits, axis=2)
-        out_label_list: List[list] = [[]
-                                      for _ in range(out_label_ids.shape[0])]
-        preds_list: List[list] = [[] for _ in range(out_label_ids.shape[0])]
-
-        for i in range(out_label_ids.shape[0]):
-            for j in range(out_label_ids.shape[1]):
-                if out_label_ids[i, j] != pad_token_label_id:
-                    out_label_list[i].append(label_map[out_label_ids[i][j]])
-                    preds_list[i].append(label_map[preds[i][j]])
-
-        f1 = f1_score(out_label_list, preds_list)
-        precision = precision_score(out_label_list, preds_list)
-        recall = recall_score(out_label_list, preds_list)
-
         writer_train.add_scalar("Loss/check", loss, global_step=global_step)
-        writer_train.add_scalar("total/f1-score/train",
-                                f1, global_step=global_step)
-        writer_train.add_scalar("total/precision/train",
-                                precision, global_step=global_step)
-        writer_train.add_scalar("total/recall/train",
-                                recall, global_step=global_step)
+
         csv_data['train'].append((global_step, float(loss)))
-        csv_data['f1-score'].append((global_step, float(f1)))
-        csv_data['precision'].append((global_step, float(precision)))
-        csv_data['recall'].append((global_step, float(recall)))
+
 
         # ---------------------------------- Optimizer update ---------------------------------- #
         optimizer.step()
@@ -159,36 +137,26 @@ def eval(model: LayoutLMForTokenClassification, eval_dataloader: DataLoader,
     eval_loss = eval_loss / nb_eval_steps
     preds = np.argmax(preds, axis=2)
 
-    out_label_list: List[list] = [[] for _ in range(out_label_ids.shape[0])]
-    preds_list: List[list] = [[] for _ in range(out_label_ids.shape[0])]
-
-    for i in range(out_label_ids.shape[0]):
-        for j in range(out_label_ids.shape[1]):
-            if out_label_ids[i, j] != pad_token_label_id:
-                if (label_map[out_label_ids[i][j]], label_map[preds[i][j]]) != ('O', 'O'):
-                    out_label_list[i].append(label_map[out_label_ids[i][j]])
-                    preds_list[i].append(label_map[preds[i][j]])
-
-    doc_ex_match_metric = doc_exact_match(out_label_list,preds_list)
+    doc_ex_match_metric = doc_exact_match(out_label_ids, preds)
 
     results = {
         'loss': eval_loss,
-        'precision': precision_score(out_label_list, preds_list),
-        'recall': recall_score(out_label_list, preds_list),
-        'f1': f1_score(out_label_list, preds_list),
+        'precision': precision_score(out_label_ids, preds),
+        'recall': recall_score(out_label_ids, preds),
+        'f1': f1_score(out_label_ids, preds),
     }
 
     # ------------------------------------- Logs update ------------------------------------ #
     logging.info('Average evaluation loss: ' + str(eval_loss))
     logging.info(results)
-    logging.info(classification_report(out_label_list, preds_list, digits=4))
+    logging.info(classification_report(out_label_ids, preds, digits=4))
 
     if print_results:
         print('Average evaluation loss: ' + str(eval_loss))
         print(results)
-        print(classification_report(out_label_list, preds_list, digits=4))
+        # print(classification_report(out_label_ids, preds, digits=4))
         print(
-            f'Document Exact Match = {doc_ex_match_metric} on {len(out_label_list)} documents')
+            f'Document Exact Match = {doc_ex_match_metric} on {len(out_label_ids)} documents')
 
     return eval_loss
 
