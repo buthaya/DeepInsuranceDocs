@@ -87,7 +87,7 @@ def train_epoch(model: LayoutLMForTokenClassification, train_dataloader: DataLoa
 
 
 def eval(model: LayoutLMForTokenClassification, eval_dataloader: DataLoader,
-         device: torch.device, pad_token_label_id: int, label_map: dict, logging, print_results=True):
+         device: torch.device, pad_token_label_id: int, logging, print_results=True):
     """ evaluation for each epoch
 
     Parameters
@@ -100,8 +100,7 @@ def eval(model: LayoutLMForTokenClassification, eval_dataloader: DataLoader,
         The device.
     pad_token_label_id : int
         The id of pad token.
-    label_map : dict
-        The dictionary of label list with label id.
+
 
     Returns
     -------

@@ -49,7 +49,7 @@ def main():
     # Debug parameters
     config_path = 'config/funsd_config.json'
     pretrained_model = 'microsoft/layoutlm-base-uncased'
-    batch_size = 8
+    batch_size = 1
     num_train_epochs = 2
     learning_rate = 5e-5
 
