@@ -92,6 +92,9 @@ class LayoutLMDataPreparationMVLM(LayoutLMDataPreparation):
         text_column_name = "words"
         boxes_column_name = "bboxes"
         label_column_name = "labels_idx"
+        data_collator = DataCollatorForLanguageModeling(tokenizer=self.tokenizer,
+                                                        mlm=True,
+                                                        mlm_probability=self.mask_proba)
 
         # define a function to prepare the examples
         def prepare_examples(examples):
@@ -110,16 +113,20 @@ class LayoutLMDataPreparationMVLM(LayoutLMDataPreparation):
                 verbose=True,
                 return_token_type_ids=True)
             del encoding["image"]
+
+            maksed_encoding = data_collator(encoding['input_ids'])
+
             # Add labels which are the tokens' input_ids
-            encoding["labels"] = encoding["input_ids"]
+            encoding["labels"] = maksed_encoding["labels"].tolist()
+            encoding["input_ids"] = maksed_encoding["input_ids"].tolist()
 
             # Apply random masking on input_ids but not on labels. The labels are the input_ids. This will make
             # evaluation easier.
-            encoding["input_ids"], _ = self.mask_encoding(encoding["input_ids"],
-                                                                           encoding["labels"],
-                                                                           self.tokenizer,
-                                                                           mask_proba=self.mask_proba,
-                                                                           mask_label_token_id=self.mask_label_token_id)
+            # encoding["input_ids"], _ = self.mask_encoding(encoding["input_ids"],
+            #                                                                encoding["labels"],
+            #                                                                self.tokenizer,
+            #                                                                mask_proba=self.mask_proba,
+            #                                                                mask_label_token_id=self.mask_label_token_id)
             return encoding
 
         # prepare the train dataset

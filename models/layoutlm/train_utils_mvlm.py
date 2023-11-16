@@ -10,13 +10,13 @@ from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
 import torch
 from tqdm import tqdm
-from transformers import AdamW, LayoutLMForTokenClassification
+from transformers import AdamW, LayoutLMForTokenClassification, AutoTokenizer
 
 from deepinsurancedocs.utils.metrics import doc_exact_match
 
 
-def train_epoch(model: LayoutLMForTokenClassification, train_dataloader: DataLoader, LABEL_LIST: List,
-                optimizer: AdamW, device: torch.device, global_step, writers, csv_data):
+def train_epoch(model: LayoutLMForTokenClassification, train_dataloader: DataLoader,
+                optimizer: AdamW, device: torch.device, global_step, writers, csv_data, pad_token_label_id):
     """ training for each epoch
 
     Parameters
@@ -66,7 +66,10 @@ def train_epoch(model: LayoutLMForTokenClassification, train_dataloader: DataLoa
         out_label_ids = out_label_ids.tolist()
         preds = preds.tolist()
 
-        accuracy = np.mean([sklearn_accuracy_score(out_label_ids[i], preds[i]) for i in range(len(preds))])
+        # Compare predictions with original MLM labels
+        masked_positions = [[out_label_ids[i][j] == pad_token_label_id for j in range(len(out_label_ids[i]))] for i in range(len(out_label_ids))]
+
+        accuracy = np.mean([sklearn_accuracy_score(np.take(out_label_ids[i], masked_positions[i]), np.take(preds[i], masked_positions[i])) for i in range(len(preds))])
 
         writer_train.add_scalar("Loss/check", loss, global_step=global_step)
         writer_train.add_scalar("total/accuracy/train",
@@ -105,6 +108,7 @@ def eval(model: LayoutLMForTokenClassification, eval_dataloader: DataLoader,
     float
         The average evaluation loss
     """
+    mask_token_id = AutoTokenizer.from_pretrained(model.config.name_or_path).mask_token_id
     eval_loss = 0.0
     nb_eval_steps = 0
     preds: np.ndarray = np.array([])
@@ -148,9 +152,14 @@ def eval(model: LayoutLMForTokenClassification, eval_dataloader: DataLoader,
 
     # doc_ex_match_metric = doc_exact_match(out_label_ids, preds)
 
+    masked_positions = [[out_label_ids[i][j] == pad_token_label_id for j in range(len(out_label_ids[i]))] for i in
+                        range(len(out_label_ids))]
+    accuracy = np.mean(
+        [sklearn_accuracy_score(np.take(out_label_ids[i], masked_positions[i]), np.take(preds[i], masked_positions[i]))
+         for i in range(len(preds))])
     results = {
         'loss': eval_loss,
-        'accuracy': sklearn_accuracy_score(out_label_ids, preds),
+        'accuracy': accuracy,
     }
 
     # ------------------------------------- Logs update ------------------------------------ #

@@ -99,6 +99,7 @@ def main():
     best_epoch = num_train_epochs
     global_step = 0
 
+
     # --------------------------------------- Logging -------------------------------------- #
     if not os.path.exists(save_model_path + '/outputs/logs/'):
         # If it doesn't exist, create it
@@ -122,12 +123,12 @@ def main():
         logging.info('Start training epoch ' + str(epoch))
         avg_loss, global_step = train_epoch(model,
                                             train_dataloader,
-                                            LABEL_LIST,
                                             optimizer,
                                             device,
                                             global_step,
                                             writers,
-                                            csv_data)
+                                            csv_data,
+                                            pad_token_label_id)
         with torch.no_grad():
             avg_tloss = eval(model,
                              test_dataloader,
