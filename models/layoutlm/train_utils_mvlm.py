@@ -61,10 +61,14 @@ def train_epoch(model: LayoutLMForTokenClassification, train_dataloader: DataLoa
         preds = np.argmax(logits, axis=2)
         out_label_ids = labels.detach().cpu().numpy()
 
+        precision = precision_score(out_label_ids, preds)
+
         writer_train.add_scalar("Loss/check", loss, global_step=global_step)
+        writer_train.add_scalar("total/precision/train",
+                                precision, global_step=global_step)
 
         csv_data['train'].append((global_step, float(loss)))
-
+        csv_data['precision'].append((global_step, float(precision)))
 
         # ---------------------------------- Optimizer update ---------------------------------- #
         optimizer.step()
@@ -137,13 +141,11 @@ def eval(model: LayoutLMForTokenClassification, eval_dataloader: DataLoader,
     eval_loss = eval_loss / nb_eval_steps
     preds = np.argmax(preds, axis=2)
 
-    doc_ex_match_metric = doc_exact_match(out_label_ids, preds)
+    # doc_ex_match_metric = doc_exact_match(out_label_ids, preds)
 
     results = {
         'loss': eval_loss,
         'precision': precision_score(out_label_ids, preds),
-        'recall': recall_score(out_label_ids, preds),
-        'f1': f1_score(out_label_ids, preds),
     }
 
     # ------------------------------------- Logs update ------------------------------------ #
@@ -155,8 +157,8 @@ def eval(model: LayoutLMForTokenClassification, eval_dataloader: DataLoader,
         print('Average evaluation loss: ' + str(eval_loss))
         print(results)
         # print(classification_report(out_label_ids, preds, digits=4))
-        print(
-            f'Document Exact Match = {doc_ex_match_metric} on {len(out_label_ids)} documents')
+        # print(
+        #     f'Document Exact Match = {doc_ex_match_metric} on {len(out_label_ids)} documents')
 
     return eval_loss
 
