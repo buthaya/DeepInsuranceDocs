@@ -8,11 +8,10 @@ import os
 import sys
 from typing import Dict
 from PIL import Image
+import numpy as np
 from datasets import Dataset, DatasetDict, Features, Sequence, ClassLabel, Value, Array2D, Array3D
 
 sys.path[0] = r''  # nopep8
-print(os.getcwd())  # nopep8
-print(sys.path)  # nopep8
 
 from transformers import AutoProcessor
 import json
@@ -34,7 +33,7 @@ class LayoutLMDataPreparation:
         with open(self.config_path, 'r', encoding='utf-8') as config_file:
             self.config = json.load(config_file)
         self.processor = AutoProcessor.from_pretrained(
-            "microsoft/layoutlmv2-base-uncased", apply_ocr=False)
+            "microsoft/layoutlm-base-uncased", apply_ocr=False)
         self.features = Features({
             'input_ids': Sequence(feature=Value(dtype='int64')),
             'attention_mask': Sequence(Value(dtype='int64')),
@@ -110,7 +109,17 @@ class LayoutLMDataPreparation:
             word_labels = examples[label_column_name]
             # encode the examples
             encoding = self.processor(
-                                    images=[Image.open(image_path).convert("RGB") for image_path in examples['image_path']],
+                                    images=[np.zeros((1,1,1)) for image_path in examples['image_path']],
+                                    text=words,
+                                    boxes=boxes,
+                                    word_labels=word_labels,
+                                    add_special_tokens=True,
+                                    padding="max_length",
+                                    truncation=True,
+                                    verbose=True,
+                                    return_token_type_ids=True)
+
+            encoding = processor_2(
                                     text=words,
                                     boxes=boxes,
                                     word_labels=word_labels,

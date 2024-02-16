@@ -9,9 +9,7 @@ __pycache__/
 .env/*
 
 # Datasets
-data/PAYSLIPS/*
-data/FUNSD/*
-data/fcc_pif/*
+data/*
 
 # Network certificates
 cert/*

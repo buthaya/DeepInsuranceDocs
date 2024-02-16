@@ -118,3 +118,4 @@ def label_dict_transform(label_dict, scheme):
     if scheme == 'BIO':
         return label_dict_to_bio(label_dict)
     return label_dict_to_bieso(label_dict)
+    

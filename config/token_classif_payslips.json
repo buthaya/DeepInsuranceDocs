@@ -1,0 +1,27 @@
+{
+    "data_dir": "/domino/datasets/local/DeepInsuranceDocs/payslips",
+    "input_format": "text_and_boxes",
+    "pretrained_model": "microsoft/layoutlm-base-uncased",
+    "is_local_model": true,
+    "preprocessing": {
+        "normalize_text": true,
+        "image_resize": [224, 224],
+        "tagging_scheme": "BIO"
+    },
+    "label_list":{
+        "0": "O",
+        "1": "BEGIN_PAY_PERIOD",
+        "2": "END_PAY_PERIOD",
+        "3": "GROSS_PAY_PER_PERIOD",
+        "4": "GROSS_TAXABLE_PER_PERIOD",
+        "5": "NET_PAY_PER_PERIOD",
+        "6": "PAYG_TAX_PER_PERIOD",
+        "7": "PAY_DATE",
+        "8": "POST_TAX_DEDUCTIONS_PER_PERIOD",
+        "9": "PRE_TAX_DEDUCTION_PER_PERIOD"},
+    "training_parameters":{
+        "epoch_num" : 5,
+        "batch_size" : 8,
+        "learning_rate": 5e-5
+    }
+}

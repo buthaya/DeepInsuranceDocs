@@ -1,0 +1,1 @@
+python /mnt/deepinsurancedocs/layoutlm/mvlm/train.py --config_path /mnt/config/mvlm_docile_50k.json
