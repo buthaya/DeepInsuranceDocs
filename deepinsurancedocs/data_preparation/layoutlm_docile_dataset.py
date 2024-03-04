@@ -1,9 +1,9 @@
 import logging
 import os
-
-import torch
 import json
 import glob
+import torch
+
 from tqdm import tqdm
 from torch.utils.data import Dataset
 
@@ -51,7 +51,7 @@ class LayoutLMDocileDataset(Dataset):
     def __getitem__(self, index):
         # If docile, index must match doc+page index
         example_str = self.docile_list_data[index]
-        document_index, page_index = self.docile_list_data[0].replace('.json','').split('_')
+        document_index, page_index = self.docile_list_data[index].replace('.json','').split('_')
         
         page_index = int(page_index)
         docile_document = Document(docid=document_index,
@@ -60,11 +60,14 @@ class LayoutLMDocileDataset(Dataset):
                                     load_ocr=False,
                                     cache_images=CachingConfig.OFF,
                                 )
-        docile_page_ocr_data = docile_document.ocr.get_all_words(page_index, snapped=True)
+
+        docile_page_ocr_data = docile_document.ocr.get_all_words(page_index, snapped=False)
         page_width, page_height = docile_document.annotation.page_image_size_at_200dpi(page_index)
 
         example = convert_docile_obj_to_example(docile_page_ocr_data, page_width, page_height, example_str)
+
         del docile_document, docile_page_ocr_data, page_width, page_height
+        
         # Convert example to features
         feature = convert_example_to_features(
             example,
@@ -166,7 +169,7 @@ def convert_docile_obj_to_example(docile_page_ocr_data, page_width, page_height,
         assert max(normalize_bbox(scaled_bbox, page_width, page_height)) <= 1000
         page_words.append(word.text)
         page_labels.append(None)
-
+    
     example = InputExample(guid="",  # "%s-%d" % (mode, guid_index),
                         words=page_words,
                         labels=page_labels,
@@ -174,6 +177,24 @@ def convert_docile_obj_to_example(docile_page_ocr_data, page_width, page_height,
                         actual_bboxes=page_boxes,
                         file_name=page_filename,
                         page_size=page_size)
+    try:
+        sorted_data_words = sorted(zip(example.boxes, example.words), key=lambda x:sort_key(x[0]))
+        sorted_data_labels = sorted(zip(example.boxes, example.labels), key=lambda x:sort_key(x[0]))
+        sorted_data_actual_bboxes = sorted(zip(example.boxes, example.actual_bboxes), key=lambda x:sort_key(x[0]))
+
+        example.boxes, example.words = zip(*sorted_data_words)
+        example.boxes, example.labels = zip(*sorted_data_labels)
+        example.boxes, example.actual_bboxes = zip(*sorted_data_actual_bboxes)
+
+        example.boxes = list(example.boxes)
+        example.words = list(example.words)
+        example.labels = list(example.labels)
+        example.actual_bboxes = list(example.actual_bboxes)
+    except:
+        # Will happen if there is no word in the page for instance. 
+        # (Although documents with no text should be deleted.)
+        pass
+    
     return example
 
 def convert_example_to_features(
@@ -334,3 +355,5 @@ def convert_examples_to_features_multi_threaded(examples, label_list, max_seq_le
 
     return features
             
+def sort_key(box):
+    return (box[1], box[0])  # Sort first by y1 (top-to-bottom), then by x1 (left-to-right)

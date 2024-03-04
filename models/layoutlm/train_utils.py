@@ -225,16 +225,14 @@ def eval(model: LayoutLMForTokenClassificationInternal, eval_dataloader: DataLoa
 
             # compute the predictions
             if len(preds) == 0:
-                preds = logits.detach().cpu().numpy()
+                preds = np.array(logits.detach().cpu())
                 preds = np.argmax(preds, axis=1)
-                out_label_ids = sequence_labels.detach().cpu().numpy()
+                out_label_ids = np.array(sequence_labels.detach().cpu())
             else:
-                preds_logits = logits.detach().cpu().numpy()
+                preds_logits = np.array(logits.detach().cpu())
                 preds_argmax=np.argmax(preds_logits, axis=1)
                 preds = np.append(preds, preds_argmax, axis=0)
-                out_label_ids = np.append(
-                    out_label_ids, sequence_labels.detach().cpu().numpy(), axis=0
-                )
+                out_label_ids = np.append(out_label_ids, np.array(sequence_labels.detach().cpu()), axis=0)
 
             for i in range(len(input_ids)):
                 non_o_labels = []

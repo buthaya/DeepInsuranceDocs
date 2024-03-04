@@ -60,8 +60,8 @@ def main():
     #                        Open Config with dataset & training information                       #
     # -------------------------------------------------------------------------------------------- #
     
-    config_path="/mnt/config/mvlm_docile_5k.json"
-    print(f"CAREFUL !!! DEBUG MODE USING {config_path}")
+    # config_path="/mnt/config/mvlm_docile_5k.json"
+    # print(f"CAREFUL !!! DEBUG MODE USING {config_path}")
     
     with open(config_path, 'r', encoding='utf-8') as f:
         # config is a dict to store the following information about the dataset:
@@ -75,7 +75,7 @@ def main():
     VAL_DATA_DIR = config.get('validation_data_dir')
     VAL_DATA_NAME = VAL_DATA_DIR.split('/')[-1]
     assert VAL_DATA_NAME != ''
-    DATASET_NAME = re.sub('\.\w+', '', DATA_DIR.split('/')[-1]) # delete .json extension
+    DATASET_NAME = config.get('dataset_name', 'no_dataset_name') # delete .json extension
     DOCILE_DIR = config.get('docile_data_dir', '')
     PRETRAINED_MODEL = config.get('pretrained_model', '')
     CHECKPOINT_PATH = config.get('checkpoint_path', None)
@@ -166,7 +166,7 @@ def main():
                                   sampler=train_sampler,
                                   batch_size=BATCH_SIZE,
                                   collate_fn=data_collator,
-                                  num_workers=10
+                                  num_workers=6 # Nb of workers to modulate depending on CPU
                                   )
 
     val_sampler = SequentialSampler(val_dataset)
@@ -174,7 +174,7 @@ def main():
                                  sampler=val_sampler,
                                  batch_size=BATCH_SIZE,
                                  collate_fn=data_collator,
-                                 num_workers=10
+                                 num_workers=6 # Nb of workers to modulate depending on CPU
                                  )
     # -------------------------------------------------------------------------------------------- #
     #                                            Logging                                           #
@@ -212,21 +212,21 @@ def main():
     # scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
 
      # -------------------------- Test Token Classification before MVLM -------------------------- #
-    # print('Testing Token Classification Before MVLM...')
-    # _, test_tc_results_dict = \
-    #     train_token_classifier(f"/mnt/config/token_classif_{VAL_DATA_NAME}.json", 
-    #                            model_name ="tmp",
-    #                            print_batch=True,
-    #                            save=False)
-    # print(f"Before MVLM, Token Classifier Results: {test_tc_results_dict}")
+    print('Testing Token Classification Before MVLM...')
+    _, test_tc_results_dict = \
+        train_token_classifier(f"/mnt/config/token_classif_{VAL_DATA_NAME}.json", 
+                               model_name ="tmp",
+                               print_batch=True,
+                               save=False)
+    print(f"Before MVLM, Token Classifier Results: {test_tc_results_dict}")
 
-    # csv_data['test_tc']['step'].append(global_step)
-    # csv_data['test_tc']['loss'].append(float(test_tc_results_dict['loss']))
-    # csv_data['test_tc']['f1'].append(float(test_tc_results_dict['f1']))
-    # csv_data['test_tc']['doc_exact_match'].append(float(test_tc_results_dict['doc_exact_match']))
-    # writer_test_tc.add_scalar("Loss/test_tc", test_tc_results_dict['loss'], global_step=global_step)
-    # writer_test_tc.add_scalar("Metrics/f1", test_tc_results_dict['f1'], global_step=global_step)
-    # writer_test_tc.add_scalar("Metrics/doc_exact_match",test_tc_results_dict['doc_exact_match'], global_step=global_step)
+    csv_data['test_tc']['step'].append(global_step)
+    csv_data['test_tc']['loss'].append(float(test_tc_results_dict['loss']))
+    csv_data['test_tc']['f1'].append(float(test_tc_results_dict['f1']))
+    csv_data['test_tc']['doc_exact_match'].append(float(test_tc_results_dict['doc_exact_match']))
+    writer_test_tc.add_scalar("Loss/test_tc", test_tc_results_dict['loss'], global_step=global_step)
+    writer_test_tc.add_scalar("Metrics/f1", test_tc_results_dict['f1'], global_step=global_step)
+    writer_test_tc.add_scalar("Metrics/doc_exact_match",test_tc_results_dict['doc_exact_match'], global_step=global_step)
 
     tmp_save_path = os.path.join(SAVE_MODEL_PATH, 'tmp')
     # -------------------------------------------------------------------------------------------- #

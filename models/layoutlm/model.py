@@ -54,7 +54,7 @@ class LayoutLMForTokenClassificationInternal(LayoutLMForTokenClassification):
 
         # ( =outputs[0] in hugging face code, but having "hidden_states" key is more legible)
         sequence_output = outputs['hidden_states'][-1] 
-        # sequence_output = self.dropout(sequence_output)
+        sequence_output = self.dropout(sequence_output)
 
         # Take only the first token for the words that are subtokenized for loss
         # tokens           = [[CLS], 'i', 'lo##', '##ve', 'new', 'york', [SEP]]

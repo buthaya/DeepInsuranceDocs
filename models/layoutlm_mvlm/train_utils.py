@@ -178,18 +178,18 @@ def eval(model: LayoutLMForMaskedLM,
 
             # compute the predictions
             if len(preds) == 0:
-                preds = logits.detach().cpu().numpy()
-                out_label_ids = labels.detach().cpu().numpy()
+                preds = np.array(np.argmax(logits.detach().cpu(), axis=1))
+                out_label_ids = np.array(labels.detach().cpu())
             else:
-                preds = np.append(preds, logits.detach().cpu().numpy(), axis=0)
+                preds = np.append(preds, np.argmax(np.array(logits.detach().cpu().numpy()), axis=1), axis=0)
                 out_label_ids = np.append(
-                    out_label_ids, labels.detach().cpu().numpy(), axis=0
+                    out_label_ids, np.array(labels.detach().cpu()), axis=0
                 )
 
+            del input_ids, attention_mask, token_type_ids, labels, bbox, masked_tokens_bool
     # compute average evaluation loss
     loss = loss / nb_eval_steps
     perplexity = torch.exp(torch.tensor(loss))
-    preds = np.argmax(preds, axis=1)
 
     masked_pred_ids_torch = torch.tensor(preds, dtype=torch.long)
 

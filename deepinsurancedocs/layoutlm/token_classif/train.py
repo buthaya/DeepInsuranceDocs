@@ -45,8 +45,7 @@ def train_token_classifier(config_path,
 
     # Use cross entropy ignore index as padding label id so that only real label ids contribute to the loss later
     pad_token_label_id = CrossEntropyLoss().ignore_index
-    config_path="/mnt/config/token_classif_docile.json"
-    print(f"CAREFUL !!! DEBUG MODE USING {config_path}")
+    
     # ------------------ Open Config with dataset & training information ------------------ #
     with open(config_path, 'r', encoding='utf-8') as f:
         # config is a dict to store the following information about the dataset:
@@ -58,7 +57,11 @@ def train_token_classifier(config_path,
 
     data_dir = config.get('data_dir', '')
     dataset_name = data_dir.split('/')[-1]
-    pretrained_model = config.get('pretrained_model', None)
+    # If we don't mention a pretrained model in the function, load the default one from the config
+    # This is useful so that we can load weights from the pretrained model during
+    # MVLM training
+    if not pretrained_model:
+        pretrained_model = config.get('pretrained_model', None)
     checkpoint_path = config.get('checkpoint_path', None)
     batch_size = config['training_parameters'].get('batch_size', 1)
     learning_rate = config['training_parameters'].get('learning_rate', 0.001)
@@ -94,11 +97,13 @@ def train_token_classifier(config_path,
                                   sampler=train_sampler,
                                   batch_size=batch_size,
                                 #   collate_fn=layoutlm_collate_fn
+                                  num_workers=6,
                                   )
     val_dataloader = DataLoader(val_dataset,
                                  sampler=val_sampler,
                                  batch_size=batch_size,
                                 #  collate_fn=layoutlm_collate_fn
+                                  num_workers=6,
                                  )
 
     # ---------------------------------------- Model --------------------------------------- #
@@ -254,17 +259,15 @@ def train_token_classifier(config_path,
 def main():
     # ------------------------------- Training args ------------------------------ #
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config_path', type=str,
-                        default='config/payslips_config_ft_payslips.json')
+    parser.add_argument('--config_path', type=str)
 
     args = parser.parse_args()
 
     config_path = args.config_path
 
     # Debug parameters
-    # config_path = 'config/token_classif_payslips.json'
-    # config_path = '/domino/datasets/local/DeepInsuranceDocs/models/layoutlm_full_pipeline/mvlm_docile_10k_tc_docile/05-02-2024_15h29/token_classif_config.json'
-    config_path = '/mnt/config/token_classif_docile.json'
+    # print(f"CAREFUL !!! DEBUG MODE USING {config_path}")
+    # config_path = '/mnt/config/token_classif_docile.json'
 
     save_model_path, eval_result_dict = train_token_classifier(config_path,
                                                                print_batch=True,

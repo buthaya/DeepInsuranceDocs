@@ -1,8 +1,9 @@
 {
-    "data_dir": "/domino/datasets/local/DeepInsuranceDocs/docile_10k/docile_10k.json",
+    "data_dir": "/domino/datasets/local/DeepInsuranceDocs/docile_10k/list_pages.json",
     "dataset_name": "docile_10k",
     "is_docile": true,
     "validation_data_dir": "/domino/datasets/local/DeepInsuranceDocs/docile",
+    "docile_data_dir": "/domino/datasets/docile/data/docile/",
     "input_format": "text_and_boxes",
     "pretrained_model": "microsoft/layoutlm-base-uncased",
     "preprocessing": {
