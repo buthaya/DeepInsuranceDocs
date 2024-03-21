@@ -1,0 +1,19 @@
+{'epoch_num': 5, 'batch_size': 8, 'learning_rate': 5e-05, 'gradient_accumulation_steps': 10}
+Downloading tokenizer_config.json:   0%|          | 0.00/170 [00:00<?, ?B/s]Downloading tokenizer_config.json: 100%|██████████| 170/170 [00:00<00:00, 65.2kB/s]
+Downloading vocab.txt:   0%|          | 0.00/232k [00:00<?, ?B/s]Downloading vocab.txt: 100%|██████████| 232k/232k [00:00<00:00, 1.42MB/s]Downloading vocab.txt: 100%|██████████| 232k/232k [00:00<00:00, 1.42MB/s]
+Traceback (most recent call last):
+  File "/gpfsssd/scratch/rech/zke/uir37ma/DeepInsuranceDocs/deepinsurancedocs/layoutlm/mvlm/train.py", line 309, in <module>
+    main()
+  File "/gpfsssd/scratch/rech/zke/uir37ma/DeepInsuranceDocs/deepinsurancedocs/layoutlm/mvlm/train.py", line 99, in main
+    tokenizer = LayoutLMTokenizer.from_pretrained(pretrained_model_name_or_path="microsoft/layoutlm-base-uncased")
+  File "/gpfsssd/scratch/rech/zke/uir37ma/DeepInsuranceDocs/.env/lib/python3.9/site-packages/transformers/tokenization_utils_base.py", line 1983, in from_pretrained
+    resolved_vocab_files[file_id] = cached_file(
+  File "/gpfsssd/scratch/rech/zke/uir37ma/DeepInsuranceDocs/.env/lib/python3.9/site-packages/transformers/utils/hub.py", line 430, in cached_file
+    resolved_file = hf_hub_download(
+  File "/gpfsssd/scratch/rech/zke/uir37ma/DeepInsuranceDocs/.env/lib/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 118, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/gpfsssd/scratch/rech/zke/uir37ma/DeepInsuranceDocs/.env/lib/python3.9/site-packages/huggingface_hub/file_download.py", line 1431, in hf_hub_download
+    http_get(
+  File "/gpfsssd/scratch/rech/zke/uir37ma/DeepInsuranceDocs/.env/lib/python3.9/tempfile.py", line 492, in __exit__
+    result = self.file.__exit__(exc, value, tb)
+OSError: [Errno 122] Disk quota exceeded

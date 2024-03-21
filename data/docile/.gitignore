@@ -1,0 +1,8 @@
+*.swp
+.DS_Store
+__pycache__/
+.ipynb_checkpoints
+
+/data/
+
+tests/data/sample-dataset/cached_images/
