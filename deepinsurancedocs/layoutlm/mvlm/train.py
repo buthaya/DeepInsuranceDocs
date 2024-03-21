@@ -86,7 +86,9 @@ def main():
     ACCUMULATION_STEPS = config['training_parameters'].get('gradient_accumulation_steps', 1)
     TAGGING_SCHEME = config['preprocessing'].get('tagging_scheme', None)
     
-    label_dict = json.loads(os.path.join(DATA_DIR, 'label_list.json'))
+    # Open os.path.join(DATA_DIR, 'label_list.json')
+    with open(os.path.join(DATA_DIR, 'label_list.json'), 'r', encoding='utf-8') as f:
+        label_dict = json.load(f)
     subset_index_path = os.path.join(DATA_DIR, DATASET_NAME,'list_pages.json')
 
     print(config['training_parameters'])
