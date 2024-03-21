@@ -68,6 +68,7 @@ def train_token_classifier(config_path,
     local_files_only = config.get('is_local_model', False)
     accumulation_steps = config['training_parameters'].get('gradient_accumulation_steps', 1)
     tagging_scheme = config['preprocessing']['tagging_scheme']
+    MODEL_DIR = config.get('model_dir', None)
     current_date = datetime.now().strftime("%d-%m-%Y_%Hh%M")
 
     save_model_path = f'/domino/datasets/local/DeepInsuranceDocs/models/{model_name}/{dataset_name}/{current_date}'
@@ -78,7 +79,7 @@ def train_token_classifier(config_path,
     with open(os.path.join(save_model_path, 'training_config.json'), 'w', encoding='utf-8') as f:
         json.dump(config, f)
     # ------------------------------------- Tokenizer -------------------------------------- #
-    tokenizer = LayoutLMTokenizer.from_pretrained(pretrained_model_name_or_path='microsoft/layoutlm-base-uncased')
+    tokenizer = LayoutLMTokenizer.from_pretrained(os.path.join(MODEL_DIR, 'microsoft/layoutlm-base-uncased'))
     
     idx2label = label_dict_transform(label_dict=config['label_list'], 
                                      scheme=tagging_scheme)

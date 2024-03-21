@@ -44,7 +44,9 @@ class LayoutLMDataPreparationMVLM(LayoutLMDataPreparation):
             self.config = json.load(config_file)
         self.processor = AutoProcessor.from_pretrained(
             "microsoft/layoutlmv2-base-uncased", apply_ocr=False)
-        self.tokenizer = AutoTokenizer.from_pretrained("microsoft/layoutlm-base-uncased")
+        self.tokenizer = AutoTokenizer.from_pretrained(os.path.join(self.config.get('model_dir'),
+                                                                    "microsoft/layoutlm-base-uncased")
+                                                                    )
         self.features = Features({
             'input_ids': Sequence(feature=Value(dtype='int64')),
             'attention_mask': Sequence(Value(dtype='int64')),

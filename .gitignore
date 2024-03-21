@@ -9,19 +9,24 @@ __pycache__/
 .env/*
 
 # Datasets
-# data/*
+!data/
+data/*
+!data/docile/
 data/docile/*
 !docile_5k/
-!label_list.json
+!data/docile/label_list.json
 !data/docile/place_docile_data_here.txt
 
 # Models
+!models/
+models/*
+!models/huggingface/
+!models/layoutlm/
+!models/layoutlm_mvlm/
 models/huggingface/*
+!models/huggingface/layoutlm-base-uncased/
+models/huggingface/layoutlm-base-uncased/*
 !models/huggingface/layoutlm-base-uncased/place_layoutlm_base_uncased_here.txt
 
 # Network certificates
 cert/*
-
-# Outputs of model training
-models/layoutlm/outputs
-models/layoutlmv3/outputs

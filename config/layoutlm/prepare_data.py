@@ -32,8 +32,8 @@ class LayoutLMDataPreparation:
         self.config_path = config_path
         with open(self.config_path, 'r', encoding='utf-8') as config_file:
             self.config = json.load(config_file)
-        self.processor = AutoProcessor.from_pretrained(
-            "microsoft/layoutlm-base-uncased", apply_ocr=False)
+        self.processor = AutoProcessor.from_pretrained(os.path.join(self.config['model_dir'],"microsoft/layoutlm-base-uncased")
+                                                       , apply_ocr=False)
         self.features = Features({
             'input_ids': Sequence(feature=Value(dtype='int64')),
             'attention_mask': Sequence(Value(dtype='int64')),

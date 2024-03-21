@@ -5,6 +5,7 @@
     "validation_data_dir": "/domino/datasets/local/DeepInsuranceDocs/docile",
     "docile_data_dir": "/domino/datasets/docile/data/docile/",
     "input_format": "text_and_boxes",
+    "model_dir": "models/huggingface/",
     "pretrained_model": null,
     "preprocessing": {
         "normalize_text": true,
