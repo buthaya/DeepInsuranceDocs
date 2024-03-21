@@ -23,6 +23,8 @@ from transformers import AdamW, LayoutLMTokenizer, DataCollatorForLanguageModeli
 sys.path[0] = ''  # nopep8
 sys.path.append('data/docile')
 
+print(sys.path)
+print(os.getcwd())
 from docile.dataset import CachingConfig, Dataset, Document
 
 from deepinsurancedocs.data_preparation.data_utils import label_dict_transform  # nopep8
