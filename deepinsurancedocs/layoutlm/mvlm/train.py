@@ -30,8 +30,8 @@ from deepinsurancedocs.data_preparation.layoutlm_docile_dataset import LayoutLMD
 from deepinsurancedocs.data_preparation.layoutlm_dataset import LayoutLMDataset  # nopep8
 from deepinsurancedocs.layoutlm.token_classif.train import train_token_classifier  # nopep8
 from models.layoutlm_mvlm.prepare_data import LayoutLMDataPreparationMVLM  # nopep8
-from models.layoutlm_mvlm.train_utils import eval, train_epoch, layoutlm_collate_fn  # nopep8
-from models.layoutlm_mvlm.model import LayoutLMForMaskedLMInternal
+from models.layoutlm_mvlm.train_utils1 import eval, train_epoch, layoutlm_collate_fn  # nopep8
+from models.layoutlm_mvlm.model1 import LayoutLMForMaskedLMInternal
 
 
 def main():
@@ -40,11 +40,12 @@ def main():
     # -------------------------------------------------------------------------------------------- #
     parser = argparse.ArgumentParser()
     parser.add_argument('--config_path', type=str)
-    current_date = datetime.now().strftime("%d-%m-%Y_%Hh%M")
+    parser.add_argument('--output_dir', type=str)
 
     args = parser.parse_args()
 
     config_path = args.config_path
+    SAVE_MODEL_PATH = args.output_dir
 
     # Debug parameters
     # config_path = 'config/mvlm_docile_5k.json'
@@ -87,10 +88,9 @@ def main():
     TAGGING_SCHEME = config['preprocessing'].get('tagging_scheme', None)
     
     print(config['label_list'])
-    SAVE_MODEL_PATH = f'/domino/datasets/local/DeepInsuranceDocs/models/{model_name}/{DATASET_NAME}/{current_date}'
-    print(f"MVLM Training date: {current_date}")
+
     print(config['training_parameters'])
-    os.makedirs(SAVE_MODEL_PATH, exist_ok=True)
+
     # -------------------------------------------------------------------------------------------- #
     #                                           Tokenizer                                          #
     # -------------------------------------------------------------------------------------------- #
@@ -120,17 +120,8 @@ def main():
     #                                             Data                                             #
     # -------------------------------------------------------------------------------------------- #
     print('Loading Docile Unlabeled Dataset...')
-    # docile_unlabeled_dataset = Dataset("unlabeled", DOCILE_DIR, load_annotations=False, load_ocr=False, cache_images=CachingConfig.OFF)
-    # docile_train_dataset = Dataset("train", DOCILE_DIR, load_annotations=False, load_ocr=False, cache_images=CachingConfig.OFF)
 
     print('Loading MVLM Train Dataset...')
-    # train_dataset = LayoutLMDocileDataset(docile_unlabeled_dataset, 
-    #                                       DATA_DIR, # Path to the index of the subset we are using
-    #                                       tokenizer, 
-    #                                       label_list, 
-    #                                       pad_token_label_id, 
-    #                                       'train',
-    #                                       TAGGING_SCHEME)
     train_dataset = LayoutLMDocileDataset(DOCILE_DIR, # Path to the index of the subset we are using
                                           DATA_DIR,
                                           tokenizer, 
@@ -140,15 +131,6 @@ def main():
                                           TAGGING_SCHEME)
 
     print('Loading MVLM Validation Dataset...')
-    # list_data_train is the index of the labeled docile data (~6000 pages)
-    # val_dataset = LayoutLMDocileDataset(docile_train_dataset, 
-    #                                     os.path.join(DOCILE_DIR, 'list_data_train.json'),
-    #                                     tokenizer,
-    #                                     label_list,
-    #                                     pad_token_label_id,
-    #                                     'test',
-    #                                     TAGGING_SCHEME)
-
     val_dataset = LayoutLMDocileDataset(DOCILE_DIR,
                                         os.path.join(DOCILE_DIR, 'list_data_train.json'),
                                         tokenizer,
@@ -158,10 +140,11 @@ def main():
                                         TAGGING_SCHEME)
 
 
-    data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=True, mlm_probability=0.15)
+    data_collator = DataCollatorForLanguageModeling(tokenizer, 
+                                                    mlm=True, 
+                                                    mlm_probability=0.15)
 
-    train_sampler = RandomSampler(
-        train_dataset)
+    train_sampler = RandomSampler(train_dataset)
     train_dataloader = DataLoader(train_dataset,
                                   sampler=train_sampler,
                                   batch_size=BATCH_SIZE,
@@ -181,7 +164,7 @@ def main():
     # -------------------------------------------------------------------------------------------- #
     if not os.path.exists(SAVE_MODEL_PATH + '/logs/'):
         os.makedirs(SAVE_MODEL_PATH + '/logs/')
-    log_file = f'train_{model_name}_{DATASET_NAME}_{current_date}.log'
+    log_file = f'train_{model_name}_{DATASET_NAME}.log'
     logging.basicConfig(filename=SAVE_MODEL_PATH + '/logs/' + log_file,
                         level=logging.INFO)
     logging.info('Training settings')
@@ -206,33 +189,9 @@ def main():
                             'f1': [], 
                             'doc_exact_match': []}}
 
-     # --------------------------------------- Linear Decay -------------------------------------- #
-    # scheduler = LinearLR(optimizer, start_factor=LEARNING_RATE, end_factor=0, total_iters=NUM_TRAIN_EPOCHS * len(train_dataloader)// ACCUMULATION_STEPS)
-    # Add this line after creating the optimizer
-    # scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
-
-     # -------------------------- Test Token Classification before MVLM -------------------------- #
-    print('Testing Token Classification Before MVLM...')
-    _, test_tc_results_dict = \
-        train_token_classifier(f"/mnt/config/token_classif_{VAL_DATA_NAME}.json", 
-                               model_name ="tmp",
-                               print_batch=True,
-                               save=False)
-    print(f"Before MVLM, Token Classifier Results: {test_tc_results_dict}")
-
-    csv_data['test_tc']['step'].append(global_step)
-    csv_data['test_tc']['loss'].append(float(test_tc_results_dict['loss']))
-    csv_data['test_tc']['f1'].append(float(test_tc_results_dict['f1']))
-    csv_data['test_tc']['doc_exact_match'].append(float(test_tc_results_dict['doc_exact_match']))
-    writer_test_tc.add_scalar("Loss/test_tc", test_tc_results_dict['loss'], global_step=global_step)
-    writer_test_tc.add_scalar("Metrics/f1", test_tc_results_dict['f1'], global_step=global_step)
-    writer_test_tc.add_scalar("Metrics/doc_exact_match",test_tc_results_dict['doc_exact_match'], global_step=global_step)
-
-    tmp_save_path = os.path.join(SAVE_MODEL_PATH, 'tmp')
     # -------------------------------------------------------------------------------------------- #
     #                                           Training                                           #
     # -------------------------------------------------------------------------------------------- #
-
     # ---------------------------------------- First Eval ---------------------------------------- #
     model.eval()
     with torch.no_grad():
@@ -251,8 +210,8 @@ def main():
         writer_val.add_scalar("Metrics/accuracy", val_results["accuracy"], global_step=global_step)
         writer_val.add_scalar("Metrics/perplexity",val_results["perplexity"], global_step=global_step)
 
+    # ---------------------------------------- Training ---------------------------------------- #
     model.train()
-
     for epoch in tqdm(range(NUM_TRAIN_EPOCHS), desc='Training MVLM', unit='Epoch'):
         logging.info('Start training epoch ' + str(epoch))
         avg_loss, global_step, csv_data = train_epoch(model,
@@ -284,26 +243,6 @@ def main():
         
         model.train()
 
-        model.save_pretrained(tmp_save_path)
-        # ------------ At the end of the Epoch, train a TC to see progress during MVLM ----------- #
-        print(f"Training Token Classifier at Epoch n°{epoch}...")
-
-        _, test_tc_results_dict = \
-            train_token_classifier(f"/mnt/config/token_classif_{VAL_DATA_NAME}.json", 
-                                   model_name ="tmp",
-                                   pretrained_model= tmp_save_path,
-                                   print_batch=False,
-                                   save=False)
-        
-        print(f"Epoch n°{epoch} Token Classifier Results: {test_tc_results_dict}")
-        csv_data['test_tc']['step'].append(global_step)
-        csv_data['test_tc']['loss'].append(float(test_tc_results_dict['loss']))
-        csv_data['test_tc']['f1'].append(float(test_tc_results_dict['f1']))
-        csv_data['test_tc']['doc_exact_match'].append(float(test_tc_results_dict['doc_exact_match']))
-        writer_test_tc.add_scalar("Loss/tc", test_tc_results_dict['loss'], global_step=global_step)
-        writer_test_tc.add_scalar("Metrics/f1", test_tc_results_dict['f1'], global_step=global_step)
-        writer_test_tc.add_scalar("Metrics/doc_exact_match",test_tc_results_dict['doc_exact_match'], global_step=global_step)
-
         best_state = {
             'epoch': epoch,
             'model_state_dict': model.state_dict(),
@@ -328,7 +267,7 @@ def main():
     writer_train.close()
 
     # ------------------------------------ Save metrics in CSV ----------------------------------- #
-    csv_path = f"{SAVE_MODEL_PATH}/mvlm_runs"
+    csv_path = f"{SAVE_MODEL_PATH}/runs"
     os.makedirs(csv_path, exist_ok=True)
 
     # Save data for 'train' set

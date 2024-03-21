@@ -10,7 +10,7 @@ from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
 import torch
 from tqdm import tqdm
-from transformers import AdamW, LayoutLMForTokenClassification, AutoTokenizer, LayoutLMForMaskedLM
+from transformers import AdamW, AutoTokenizer, LayoutLMForMaskedLM
 from models.layoutlm_mvlm.model import LayoutLMForMaskedLMInternal
 
 from deepinsurancedocs.utils.metrics import doc_exact_match

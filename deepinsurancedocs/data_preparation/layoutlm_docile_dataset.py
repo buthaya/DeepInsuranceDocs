@@ -60,7 +60,6 @@ class LayoutLMDocileDataset(Dataset):
                                     load_ocr=False,
                                     cache_images=CachingConfig.OFF,
                                 )
-
         docile_page_ocr_data = docile_document.ocr.get_all_words(page_index, snapped=False)
         page_width, page_height = docile_document.annotation.page_image_size_at_200dpi(page_index)
 

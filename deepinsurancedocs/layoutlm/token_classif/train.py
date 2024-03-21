@@ -45,7 +45,6 @@ def train_token_classifier(config_path,
 
     # Use cross entropy ignore index as padding label id so that only real label ids contribute to the loss later
     pad_token_label_id = CrossEntropyLoss().ignore_index
-    
     # ------------------ Open Config with dataset & training information ------------------ #
     with open(config_path, 'r', encoding='utf-8') as f:
         # config is a dict to store the following information about the dataset:
@@ -259,13 +258,16 @@ def train_token_classifier(config_path,
 def main():
     # ------------------------------- Training args ------------------------------ #
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config_path', type=str)
+    parser.add_argument('--config_path', type=str,
+                        default='config/payslips_config_ft_payslips.json')
 
     args = parser.parse_args()
 
     config_path = args.config_path
 
     # Debug parameters
+    # config_path = 'config/token_classif_payslips.json'
+    # config_path = '/domino/datasets/local/DeepInsuranceDocs/models/layoutlm_full_pipeline/mvlm_docile_10k_tc_docile/05-02-2024_15h29/token_classif_config.json'
     # print(f"CAREFUL !!! DEBUG MODE USING {config_path}")
     # config_path = '/mnt/config/token_classif_docile.json'
 
