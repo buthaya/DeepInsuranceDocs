@@ -10,6 +10,7 @@ __pycache__/
 
 # Datasets
 # data/*
+data/docile/data/*
 
 # Network certificates
 cert/*
