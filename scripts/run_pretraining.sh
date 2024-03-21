@@ -86,4 +86,4 @@ python deepinsurancedocs/layoutlm/mvlm/train.py \
        --output_dir $MVLM_SAVE_DIR  \
        > $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
 
-cat $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
+# cat $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
