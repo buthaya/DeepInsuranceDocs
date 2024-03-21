@@ -84,7 +84,9 @@ echo Running MVLM, check at $TOKEN_CLASSIF_SAVE_DIR/pretrain_${MVLM_DATASET}_tc_
 
 mvlm_model_folder=$(echo "$mvlm_output" | grep -oP "MVLM Model saved in: \K.*")
 
-python /deepinsurancedocs/layoutlm/mvlm/train.py \
+python deepinsurancedocs/layoutlm/mvlm/train.py \
     --config_path "$TOKEN_CLASSIF_CONFIG_PATH"\
     --output_dir $TOKEN_CLASSIF_SAVE_DIR  \
     &> $TOKEN_CLASSIF_SAVE_DIR/pretrain_${MVLM_DATASET}_tc_${TOKEN_CLASSIF_SAVE_DIR}.out
+
+cat $TOKEN_CLASSIF_SAVE_DIR/pretrain_${MVLM_DATASET}_tc_${TOKEN_CLASSIF_SAVE_DIR}.out

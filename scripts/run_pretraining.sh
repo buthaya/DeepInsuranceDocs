@@ -83,7 +83,9 @@ echo Running MVLM, check at $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
 
 mvlm_model_folder=$(echo "$mvlm_output" | grep -oP "MVLM Model saved in: \K.*")
 
-python /deepinsurancedocs/layoutlm/mvlm/train.py \
+python deepinsurancedocs/layoutlm/mvlm/train.py \
     --config_path "$MVLM_CONFIG_PATH"\
     --output_dir $MVLM_SAVE_DIR  \
     &> $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
+
+cat $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
