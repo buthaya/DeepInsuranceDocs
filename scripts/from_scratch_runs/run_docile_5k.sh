@@ -30,3 +30,5 @@ bash scripts/run_pretraining.sh\
     LEARNING_RATE=5e-5\
     GRADIENT_ACCUMULATION_STEPS=0\
     MVLM_CONFIG_PATH=experiments/from_scratch_mvlm_docile_5k.json
+
+# Run Token Classif on docile with model pretrained on docile_5k
