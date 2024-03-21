@@ -21,7 +21,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from transformers import AdamW, LayoutLMTokenizer, DataCollatorForLanguageModeling, LayoutLMConfig
 
 sys.path[0] = ''  # nopep8
-sys.path.append('/domino/datasets/docile')
+sys.path.append('data/docile')
 
 from docile.dataset import CachingConfig, Dataset, Document
 

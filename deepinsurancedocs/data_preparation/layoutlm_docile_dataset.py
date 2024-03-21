@@ -9,7 +9,7 @@ from torch.utils.data import Dataset
 
 import sys 
 sys.path[0] = ''  # nopep8
-sys.path.append('/domino/datasets/docile')
+sys.path.append('data/docile')
 sys.path.append('/mnt')
 
 from docile.dataset import CachingConfig, Document
