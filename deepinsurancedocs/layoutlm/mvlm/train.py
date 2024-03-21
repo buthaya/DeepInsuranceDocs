@@ -24,7 +24,7 @@ sys.path[0] = ''  # nopep8
 sys.path.append('data/docile')
 print(sys.path)
 print(os.getcwd())
-from data.docile.dataset import CachingConfig, Dataset, Document
+from docile.dataset import CachingConfig, Dataset, Document
 
 from deepinsurancedocs.data_preparation.data_utils import label_dict_transform  # nopep8
 from deepinsurancedocs.data_preparation.layoutlm_docile_dataset import LayoutLMDocileDataset  # nopep8
