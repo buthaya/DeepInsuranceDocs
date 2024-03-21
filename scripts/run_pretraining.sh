@@ -28,6 +28,7 @@ done
 
 # Navigate to dir
 cd $HOME_DIR
+echo $(pwd)
 which python
 
 # Setup
