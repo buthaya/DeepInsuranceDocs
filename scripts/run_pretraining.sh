@@ -1,8 +1,3 @@
-# Settings
-# $MVLM_DATASET="docile_5k"
-# $TOKEN_CLASSIF_DATASET="docile"
-# $FULL_PIPELINE_BASE_PATH="/domino/datasets/local/DeepInsuranceDocs/models/layoutlm_full_pipeline"
-
 ## Everything needed to run an experiment on its own aws instance
 
 # Parse keyword arguments into environment variables
@@ -14,7 +9,6 @@ do
     case "$KEY" in
             MVLM_DATASET)                    MVLM_DATASET=${VALUE} ;;
             TOKEN_CLASSIF_DATASET)           TOKEN_CLASSIF_DATASET=${VALUE} ;;
-            FULL_PIPELINE_BASE_PATH)         FULL_PIPELINE_BASE_PATH=${VALUE} ;;
             SUBSET_INDEX_PATH)               SUBSET_INDEX_PATH=${VALUE} ;;
             HOME_DIR)                        HOME_DIR=${VALUE} ;;
 
@@ -48,7 +42,7 @@ echo GOT THE FOLLOWING PARAMS:
 echo EXPERIMENT_DIR=$EXPERIMENT_DIR
 echo MVLM_DATASET=$MVLM_DATASET
 echo TOKEN_CLASSIF_DATASET=$TOKEN_CLASSIF_DATASET
-echo FULL_PIPELINE_BASE_PATH=$FULL_PIPELINE_BASE_PATH
+# echo FULL_PIPELINE_BASE_PATH=$FULL_PIPELINE_BASE_PATH
 echo SUBSET_INDEX_PATH=$SUBSET_INDEX_PATH
 echo HOME_DIR=$HOME_DIR
 
@@ -68,7 +62,7 @@ echo MVLM_CONFIG_PATH=$MVLM_CONFIG_PATH
 export EXPERIMENT_DIR=$EXPERIMENT_DIR
 export MVLM_DATASET=$MVLM_DATASET
 export TOKEN_CLASSIF_DATASET=$TOKEN_CLASSIF_DATASET
-export FULL_PIPELINE_BASE_PATH=$FULL_PIPELINE_BASE_PATH
+# export FULL_PIPELINE_BASE_PATH=$FULL_PIPELINE_BASE_PATH
 export HOME_DIR=$HOME_DIR
 export MODEL_NAME=$MODEL_NAME
 export PRETRAINED_MODEL=$PRETRAINED_MODEL
