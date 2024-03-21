@@ -2,7 +2,7 @@ MVLM_DATASET=docile_5k
 TOKEN_CLASSIF_DATASET=docile
 # FULL_PIPELINE_BASE_PATH=
 SUBSET_INDEX_PATH=data/docile/subsets_index/5k.json
-HOME_DIR=$WORK/DeepInsuranceDocs  # To adjust
+HOME_DIR=$SCRATCH/DeepInsuranceDocs  # To adjust
 
 MODEL_NAME=layoulm-base-uncased
 PRETRAINED_MODEL=null
