@@ -76,7 +76,7 @@ export GRADIENT_ACCUMULATION_STEPS=$GRADIENT_ACCUMULATION_STEPS
 export TOKEN_CLASSIF_CONFIG_PATH=$TOKEN_CLASSIF_CONFIG_PATH
 
 # 1. Proceed with Unsupervised MVLM on LayoutLM model. Resulting model will be saved in 
-echo Running MVLM, check at {$TOKEN_CLASSIF_SAVE_DIR}/pretrain_${MVLM_DATASET}_tc_${TOKEN_CLASSIF_SAVE_DIR}.out
+echo Running MVLM, check at $TOKEN_CLASSIF_SAVE_DIR/pretrain_${MVLM_DATASET}_tc_${TOKEN_CLASSIF_SAVE_DIR}.out
 
 
 # # 2. Extract the folder where the trained model has been saved
