@@ -71,13 +71,12 @@ def main():
         # - preprocessing: dictionary containing the tagging scheme used for preprocessing
         # - label_list: dictionary containing the mapping of labels to their corresponding indices
         config = json.load(f)
-    DATA_DIR = config.get('data_dir', '')
+    DATA_DIR = config.get('data_dir', None)
     # IS_DOCILE = config.get('is_docile', False)
     VAL_DATA_DIR = config.get('validation_data_dir')
     VAL_DATA_NAME = VAL_DATA_DIR.split('/')[-1]
     assert VAL_DATA_NAME != ''
     DATASET_NAME = config.get('dataset_name', 'no_dataset_name') # delete .json extension
-    DOCILE_DIR = config.get('docile_data_dir', '')
     PRETRAINED_MODEL = config.get('pretrained_model', '')
     CHECKPOINT_PATH = config.get('checkpoint_path', None)
     BATCH_SIZE = config['training_parameters'].get('batch_size', 1)
@@ -87,7 +86,8 @@ def main():
     ACCUMULATION_STEPS = config['training_parameters'].get('gradient_accumulation_steps', 1)
     TAGGING_SCHEME = config['preprocessing'].get('tagging_scheme', None)
     
-    print(config['label_list'])
+    label_dict = json.loads(os.path.join(DATA_DIR, 'label_list.json'))
+    subset_index_path = os.path.join(DATA_DIR, DATASET_NAME,'list_pages.json')
 
     print(config['training_parameters'])
 
@@ -95,7 +95,7 @@ def main():
     #                                           Tokenizer                                          #
     # -------------------------------------------------------------------------------------------- #
     tokenizer = LayoutLMTokenizer.from_pretrained(pretrained_model_name_or_path="microsoft/layoutlm-base-uncased")
-    idx2label = label_dict_transform(label_dict=config['label_list'], 
+    idx2label = label_dict_transform(label_dict=label_dict, 
                                      scheme=config['preprocessing']['tagging_scheme'])
     label2idx = {label: idx for idx, label in idx2label.items()}
     label_list = list(idx2label.values())
@@ -122,8 +122,8 @@ def main():
     print('Loading Docile Unlabeled Dataset...')
 
     print('Loading MVLM Train Dataset...')
-    train_dataset = LayoutLMDocileDataset(DOCILE_DIR, # Path to the index of the subset we are using
-                                          DATA_DIR,
+    train_dataset = LayoutLMDocileDataset(DATA_DIR, # Path to the index of the subset we are using
+                                          subset_index_path,
                                           tokenizer, 
                                           label_list, 
                                           pad_token_label_id, 
@@ -131,8 +131,8 @@ def main():
                                           TAGGING_SCHEME)
 
     print('Loading MVLM Validation Dataset...')
-    val_dataset = LayoutLMDocileDataset(DOCILE_DIR,
-                                        os.path.join(DOCILE_DIR, 'list_data_train.json'),
+    val_dataset = LayoutLMDocileDataset(DATA_DIR,
+                                        os.path.join(DATA_DIR, 'list_data_train.json'),
                                         tokenizer,
                                         label_list,
                                         pad_token_label_id,

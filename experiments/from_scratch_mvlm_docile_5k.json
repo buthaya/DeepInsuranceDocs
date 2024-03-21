@@ -1,5 +1,5 @@
 {
-    "data_dir": "/domino/datasets/local/DeepInsuranceDocs/docile_5k/list_pages.json",
+    "data_dir": "data/docile",
     "dataset_name": "docile_5k",
     "is_docile": true,
     "validation_data_dir": "/domino/datasets/local/DeepInsuranceDocs/docile",
