@@ -27,7 +27,7 @@ do
 done
 
 # Navigate to dir
-cd $HOME_DIR/DeepInsuranceDocs
+cd $HOME_DIR
 which python
 
 # Setup
