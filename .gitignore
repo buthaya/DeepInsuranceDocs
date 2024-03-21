@@ -9,7 +9,7 @@ __pycache__/
 .env/*
 
 # Datasets
-data/*
+# data/*
 
 # Network certificates
 cert/*
