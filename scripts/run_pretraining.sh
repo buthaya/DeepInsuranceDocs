@@ -81,6 +81,6 @@ echo Running MVLM, check at $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
 # # 2. Extract the folder where the trained model has been saved
 #### After MVLM, model will be saved in experiments/PRETRAIN_${MVLM_DATASET}/
 
-python deepinsurancedocs/layoutlm/mvlm/train.py --config_path "$MVLM_CONFIG_PATH" --output_dir $MVLM_SAVE_DIR  2>&1 > $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
+python deepinsurancedocs/layoutlm/mvlm/train.py --config_path "$MVLM_CONFIG_PATH" --output_dir $MVLM_SAVE_DIR  2>&1 > logs.out
 
 # cat $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
