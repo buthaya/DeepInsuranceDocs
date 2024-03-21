@@ -13,10 +13,12 @@ __pycache__/
 data/docile/*
 !docile_5k/
 !label_list.json
+!data/docile/place_docile_data_here.txt
 
 # Models
 models/huggingface/*
 !models/huggingface/layoutlm-base-uncased/place_layoutlm_base_uncased_here.txt
+
 # Network certificates
 cert/*
 
