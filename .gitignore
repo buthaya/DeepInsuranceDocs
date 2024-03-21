@@ -10,8 +10,13 @@ __pycache__/
 
 # Datasets
 # data/*
-data/docile/data/*
+data/docile/*
+!docile_5k/
+!label_list.json
 
+# Models
+models/huggingface/*
+!models/huggingface/layoutlm-base-uncased/place_layoutlm_base_uncased_here.txt
 # Network certificates
 cert/*
 
