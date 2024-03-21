@@ -31,8 +31,8 @@ cd $HOME_DIR/DeepInsuranceDocs
 which python
 
 # Setup
-EXPERIMENT_DIR=experiments/PRETRAIN_$MVLM_DATASET/TC_$TOKEN_CLASSIF_DATASET
-MVLM_SAVE_DIR=experiments/PRETRAIN_$MVLM_DATASET
+EXPERIMENT_DIR=experiments/pretrain_$MVLM_DATASET/tc_$TOKEN_CLASSIF_DATASET
+MVLM_SAVE_DIR=experiments/pretrain_$MVLM_DATASET
 
 mkdir -p $EXPERIMENT_DIR
 mkdir -p $MVLM_SAVE_DIR
