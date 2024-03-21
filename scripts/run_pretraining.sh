@@ -32,8 +32,8 @@ echo $(pwd)
 which python
 
 # Setup
-EXPERIMENT_DIR=experiments/pretrain_$MVLM_DATASET/tc_$TOKEN_CLASSIF_DATASET
-MVLM_SAVE_DIR=experiments/pretrain_$MVLM_DATASET
+EXPERIMENT_DIR=$HOME_DIR/experiments/pretrain_$MVLM_DATASET/tc_$TOKEN_CLASSIF_DATASET
+MVLM_SAVE_DIR=$HOME_DIR/experiments/pretrain_$MVLM_DATASET
 
 mkdir -p $EXPERIMENT_DIR
 mkdir -p $MVLM_SAVE_DIR
@@ -76,12 +76,12 @@ export GRADIENT_ACCUMULATION_STEPS=$GRADIENT_ACCUMULATION_STEPS
 export MVLM_CONFIG_PATH=$MVLM_CONFIG_PATH
 
 # 1. Proceed with Unsupervised MVLM on LayoutLM model. Resulting model will be saved in 
-echo Running MVLM, check at $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
+echo Running MVLM, check at $HOME_DIR/$MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
 
 
 # # 2. Extract the folder where the trained model has been saved
 #### After MVLM, model will be saved in experiments/PRETRAIN_${MVLM_DATASET}/
 
-python deepinsurancedocs/layoutlm/mvlm/train.py --config_path "$MVLM_CONFIG_PATH" --output_dir $MVLM_SAVE_DIR > $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out 2>&1 
+python deepinsurancedocs/layoutlm/mvlm/train.py --config_path "$MVLM_CONFIG_PATH" --output_dir $MVLM_SAVE_DIR > $HOME_DIR/$MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out 2>&1 
 
-cat $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
+cat $HOME_DIR/$MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
