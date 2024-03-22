@@ -43,8 +43,12 @@ def main():
                         help='Whether the dataset is docile or not')
     parser.add_argument('--validation_data_dir', type=str, required=True, 
                         help='Path to the validation data')
-    parser.add_argument('--subset_index_path', type=str, required=True,
-                        help='Path to the index of the subset we are using (e.g: data/docile/docile_5k/list_pages.json)')
+    parser.add_argument('--train_subset_index_path', type=str, required=True,
+                        help='Path to the index of the subset we are using for training (e.g: data/docile/subsets_index/5k.json)')
+    parser.add_argument('--val_subset_index_path', type=str, required=True,
+                        help='Path to the index of the subset we are using for validation (e.g: data/docile/list_data_train.json)')
+    parser.add_argument('--label_list_path', type=str, required=True,
+                        help='Path to the labels list of the dataset (e.g: data/docile/label_list.json)')
     parser.add_argument('--pretrained_model', type=str, required=True, 
                         help='Path to the pretrained model. If "null", no pretrained model.')
     parser.add_argument('--batch_size', type=int, required=True, 
@@ -68,11 +72,13 @@ def main():
     TRAIN_DATA_NAME = TRAIN_DATA_DIR.split('/')[-1]
     IS_DOCILE = args.is_docile
     assert TRAIN_DATA_NAME != ''
-    SUBSET_INDEX_PATH = args.subset_index_path
+    TRAIN_SUBSET_INDEX_PATH = args.train_subset_index_path
+    LABEL_LIST_PATH = args.label_list_path
     # Validation args
     VAL_DATA_DIR = args.validation_data_dir
     VAL_DATA_NAME = VAL_DATA_DIR.split('/')[-1]
     assert VAL_DATA_NAME != ''
+    VAL_DATA_SUBSET_INDEX_PATH = args.val_subset_index_path
     # Model args
     PRETRAINED_MODEL = args.pretrained_model
     BATCH_SIZE = args.batch_size
@@ -111,10 +117,16 @@ def main():
     # Use cross entropy ignore index as padding label id so that only real label ids contribute to the loss later
     pad_token_label_id = CrossEntropyLoss().ignore_index
 
-    # Open path containing the index of train data
-    with open(os.path.join(TRAIN_DATA_DIR, 'label_list.json'), 'r', encoding='utf-8') as f:
+    # Open path containing the labels list
+    with open(LABEL_LIST_PATH, 'r', encoding='utf-8') as f:
         label_dict = json.load(f)
-
+    # Open path containing the index of the subset we are using
+    with open(TRAIN_SUBSET_INDEX_PATH, 'r', encoding='utf-8') as f:
+        train_subset_index = json.load(f)
+    # Open path containing the index of the validation set
+    with open(VAL_DATA_SUBSET_INDEX_PATH, 'r', encoding='utf-8') as f:
+        val_subset_index = json.load(f)
+    
     # -------------------------------------------------------------------------------------------- #
     #                                           Tokenizer                                          #
     # -------------------------------------------------------------------------------------------- #
@@ -147,7 +159,7 @@ def main():
 
     print('Loading MVLM Train Dataset...')
     train_dataset = LayoutLMDocileDataset(TRAIN_DATA_DIR, # Path to the index of the subset we are using
-                                          SUBSET_INDEX_PATH,
+                                          train_subset_index,
                                           tokenizer, 
                                           label_list, 
                                           pad_token_label_id, 
@@ -156,7 +168,7 @@ def main():
 
     print('Loading MVLM Validation Dataset...')
     val_dataset = LayoutLMDocileDataset(VAL_DATA_DIR,
-                                        os.path.join(VAL_DATA_DIR, 'list_data_train.json'),
+                                        val_subset_index,
                                         tokenizer,
                                         label_list,
                                         pad_token_label_id,

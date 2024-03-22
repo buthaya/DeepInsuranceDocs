@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 class LayoutLMDocileDataset(Dataset):
-    def __init__(self,  docile_dir, subset_data_pages_path, tokenizer, label_list, pad_token_label_id, mode, tagging_scheme):
+    def __init__(self,  docile_dir, subset_docids, tokenizer, label_list, pad_token_label_id, mode, tagging_scheme):
         """
         loaded_docile_dataset : loaded full docile dataset ('unlabeled')
         subset_data_pages_path : path to the json containing the list of pages of the subset of docile you want to build
@@ -39,11 +39,7 @@ class LayoutLMDocileDataset(Dataset):
         self.mode = mode
         self.docile_dir = docile_dir
         self.tagging_scheme = tagging_scheme
-        # # Hard coded, to improve
-        # self.subset_data_pages_dir = "/domino/datasets/local/DeepInsuranceDocs/docile_1m/list_data.json"
-        self.subset_data_pages_path = subset_data_pages_path
-        with open(self.subset_data_pages_path, 'r', encoding='utf-8') as file:
-            self.docile_list_data = json.load(file)
+        self.docile_list_data = subset_docids
         
     def __len__(self):
         return len(self.docile_list_data)

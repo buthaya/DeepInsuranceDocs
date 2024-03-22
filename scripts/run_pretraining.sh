@@ -11,7 +11,9 @@ do
             MVLM_VAL_DATASET)                MVLM_VAL_DATASET=${VALUE} ;;
             TOKEN_CLASSIF_DATASET)           TOKEN_CLASSIF_DATASET=${VALUE} ;;
             IS_DOCILE)                       IS_DOCILE=${VALUE} ;;
-            SUBSET_INDEX_PATH)               SUBSET_INDEX_PATH=${VALUE} ;;
+            TRAIN_SUBSET_INDEX_PATH)         TRAIN_SUBSET_INDEX_PATH=${VALUE} ;;
+            VAL_SUBSET_INDEX_PATH)           VAL_SUBSET_INDEX_PATH=${VALUE} ;;
+            LABEL_LIST_PATH)                  LABEL_LIST_PATH=${VALUE} ;;
             HOME_DIR)                        HOME_DIR=${VALUE} ;;
 
             HF_MODEL_DIR)                      HF_MODEL_DIR=${VALUE} ;;
@@ -53,7 +55,9 @@ export EXPERIMENT_DIR=$EXPERIMENT_DIR
 export MVLM_DATASET=$MVLM_DATASET
 export MVLM_TRAIN_DATA_PATH=$MVLM_TRAIN_DATA_PATH
 export MVLM_VAL_DATA_PATH=$MVLM_VAL_DATA_PATH
-export SUBSET_INDEX_PATH=$SUBSET_INDEX_PATH
+export TRAIN_SUBSET_INDEX_PATH=$TRAIN_SUBSET_INDEX_PATH
+export VAL_SUBSET_INDEX_PATH=$VAL_SUBSET_INDEX_PATH
+export LABEL_LIST_PATH=$LABEL_LIST_PATH
 export TOKEN_CLASSIF_DATASET=$TOKEN_CLASSIF_DATASET
 export HOME_DIR=$HOME_DIR
 export HF_MODEL_DIR=$HF_MODEL_DIR
@@ -70,7 +74,8 @@ echo "-------------- GOT THE FOLLOWING PARAMS: --------------"
 echo "MVLM_TRAIN_DATA_PATH: $MVLM_TRAIN_DATA_PATH"
 echo "MVLM_VAL_DATA_PATH: $MVLM_VAL_DATA_PATH"
 echo "TOKEN_CLASSIF_DATASET: $TOKEN_CLASSIF_DATASET"
-echo "SUBSET_INDEX_PATH: $SUBSET_INDEX_PATH"
+echo "VAL_SUBSET_INDEX_PATH: $VAL_SUBSET_INDEX_PATH"
+echo "LABEL_LIST_PATH: $LABEL_LIST_PATH"
 echo "HOME_DIR: $HOME_DIR"
 echo "HF_MODEL_DIR: $HF_MODEL_DIR"
 echo "PRETRAINED_MODEL: $PRETRAINED_MODEL"
@@ -92,7 +97,9 @@ python deepinsurancedocs/layoutlm/mvlm/train.py \
     --train_data_dir $MVLM_TRAIN_DATA_PATH \
     --is_docile $IS_DOCILE \
     --validation_data_dir $MVLM_VAL_DATA_PATH \
-    --subset_index_path $SUBSET_INDEX_PATH \
+    --train_subset_index_path $TRAIN_SUBSET_INDEX_PATH \
+    --val_subset_index_path $VAL_SUBSET_INDEX_PATH \
+    --label_list_path $LABEL_LIST_PATH \
     --pretrained_model $PRETRAINED_MODEL \
     --batch_size $BATCH_SIZE \
     --learning_rate $LEARNING_RATE \
