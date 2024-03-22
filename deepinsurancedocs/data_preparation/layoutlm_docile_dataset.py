@@ -17,7 +17,7 @@ from docile.dataset import Dataset as DocileDataset
 
 from models.layoutlm.prepare_data import convert_sequence_to_tags
 from deepinsurancedocs.data_preparation.preprocessing import normalize_bbox
-from concurrent.futures import ThreadPoolExecutor
+# from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -330,29 +330,29 @@ def convert_example_to_features(
                          file_name=file_name,
                          page_size=page_size)
 
-def convert_examples_to_features_multi_threaded(examples, label_list, max_seq_length, tokenizer, cls_token_at_end=False,
-                                            cls_token="[CLS]", cls_token_segment_id=1, sep_token="[SEP]",
-                                            sep_token_extra=False, pad_on_left=False, pad_token=0,
-                                            cls_token_box=[0, 0, 0, 0], sep_token_box=[1000, 1000, 1000, 1000],
-                                            pad_token_box=[0, 0, 0, 0], pad_token_segment_id=0,
-                                            pad_token_label_id=-1, sequence_a_segment_id=0,
-                                            mask_padding_with_zero=True, tagging_scheme=None, num_threads=4):
+# def convert_examples_to_features_multi_threaded(examples, label_list, max_seq_length, tokenizer, cls_token_at_end=False,
+#                                             cls_token="[CLS]", cls_token_segment_id=1, sep_token="[SEP]",
+#                                             sep_token_extra=False, pad_on_left=False, pad_token=0,
+#                                             cls_token_box=[0, 0, 0, 0], sep_token_box=[1000, 1000, 1000, 1000],
+#                                             pad_token_box=[0, 0, 0, 0], pad_token_segment_id=0,
+#                                             pad_token_label_id=-1, sequence_a_segment_id=0,
+#                                             mask_padding_with_zero=True, tagging_scheme=None, num_threads=4):
 
-    label_map = {label: i for i, label in enumerate(label_list)}
+#     label_map = {label: i for i, label in enumerate(label_list)}
 
-    def process_example(example):
-        return convert_example_to_features(example, label_list, max_seq_length, tokenizer, cls_token_at_end,
-                                        cls_token, cls_token_segment_id, sep_token, sep_token_extra, pad_on_left,
-                                        pad_token, cls_token_box, sep_token_box, pad_token_box,
-                                        pad_token_segment_id, pad_token_label_id, sequence_a_segment_id,
-                                        mask_padding_with_zero, tagging_scheme)
+#     def process_example(example):
+#         return convert_example_to_features(example, label_list, max_seq_length, tokenizer, cls_token_at_end,
+#                                         cls_token, cls_token_segment_id, sep_token, sep_token_extra, pad_on_left,
+#                                         pad_token, cls_token_box, sep_token_box, pad_token_box,
+#                                         pad_token_segment_id, pad_token_label_id, sequence_a_segment_id,
+#                                         mask_padding_with_zero, tagging_scheme)
 
-    features = []
-    with ThreadPoolExecutor(max_workers=num_threads) as executor:
-        for result in tqdm(executor.map(process_example, examples), total=len(examples), desc='Converting examples to features'):
-            features.append(result)
+#     features = []
+#     with ThreadPoolExecutor(max_workers=num_threads) as executor:
+#         for result in tqdm(executor.map(process_example, examples), total=len(examples), desc='Converting examples to features'):
+#             features.append(result)
 
-    return features
+#     return features
             
 def sort_key(box):
     return (box[1], box[0])  # Sort first by y1 (top-to-bottom), then by x1 (left-to-right)

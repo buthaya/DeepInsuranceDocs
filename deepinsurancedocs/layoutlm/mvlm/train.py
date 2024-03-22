@@ -152,7 +152,7 @@ def main():
                                   sampler=train_sampler,
                                   batch_size=BATCH_SIZE,
                                   collate_fn=data_collator,
-                                  num_workers=6 # Nb of workers to modulate depending on CPU
+                                #   num_workers=6 # Nb of workers to modulate depending on CPU
                                   )
 
     val_sampler = SequentialSampler(val_dataset)
@@ -160,7 +160,7 @@ def main():
                                  sampler=val_sampler,
                                  batch_size=BATCH_SIZE,
                                  collate_fn=data_collator,
-                                 num_workers=6 # Nb of workers to modulate depending on CPU
+                                #  num_workers=6 # Nb of workers to modulate depending on CPU
                                  )
     # -------------------------------------------------------------------------------------------- #
     #                                            Logging                                           #
