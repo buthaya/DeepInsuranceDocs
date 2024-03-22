@@ -8,7 +8,7 @@
 #SBATCH --time=10:00:00
 #SBATCH -A zke@v100
 
-MVLM_DATASET=docile_5k
+MVLM_DATASET=docile
 MVLM_VAL_DATASET=docile
 TOKEN_CLASSIF_DATASET=docile
 IS_DOCILE=true

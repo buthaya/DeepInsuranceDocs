@@ -18,6 +18,7 @@ data/docile/*
 !data/docile/place_docile_data_here.txt
 !data/docile/list_data_test.json
 !data/docile/list_data_train.json
+!data/docile/subset_index
 # Models
 !models/
 models/*
