@@ -17,7 +17,7 @@ SUBSET_INDEX_PATH=data/docile/subsets_index/5k.json
 HOME_DIR=$SCRATCH/DeepInsuranceDocs  # To adjust
 
 HF_MODEL_DIR=$HOME_DIR/models/huggingface
-PRETRAINED_MODEL=null
+PRETRAINED_MODEL=""
 PREPROCESS_NORMALIZE_TXT=true
 PREPROCESS_TAG_SCHEME=BIO
 

@@ -123,7 +123,7 @@ def main():
     #                                             Model                                            #
     # -------------------------------------------------------------------------------------------- #
     if PRETRAINED_MODEL:
-        model = LayoutLMForMaskedLMInternal.from_pretrained(PRETRAINED_MODEL)
+        model = LayoutLMForMaskedLMInternal.from_pretrained(os.path.join(MODEL_DIR, PRETRAINED_MODEL))
     else:
         default_config=LayoutLMConfig()
         model = LayoutLMForMaskedLMInternal(default_config)
