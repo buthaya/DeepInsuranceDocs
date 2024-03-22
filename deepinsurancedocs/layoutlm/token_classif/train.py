@@ -151,8 +151,13 @@ def train_token_classifier(config_path,
     # ---------------------------- Eval at the start of training ---------------------------- #
     model.eval()
     with torch.no_grad():
-        eval_dict = eval(model, val_dataloader, device, pad_token_label_id,
-                            idx2label, logging=logging, print_results=False)
+        eval_dict = eval(model, 
+                         val_dataloader,
+                         device, 
+                         pad_token_label_id,
+                         idx2label,
+                         logging=logging,
+                         print_results=False)
 
 
         csv_data['val']['step'].append(global_step)
@@ -179,8 +184,13 @@ def train_token_classifier(config_path,
         # ---------------------------- Eval at the end of epoch ---------------------------- #
         model.eval()
         with torch.no_grad():
-            eval_dict = eval(model, val_dataloader, device, pad_token_label_id,
-                             idx2label, logging=logging, print_results=False)
+            eval_dict = eval(model,
+                             val_dataloader,
+                             device,
+                             pad_token_label_id,
+                             idx2label,
+                             logging=logging,
+                             print_results=False)
 
 
             csv_data['val']['step'].append(global_step)
@@ -196,8 +206,6 @@ def train_token_classifier(config_path,
             writer_val.add_scalar("Metrics/doc_exact_match",eval_dict['doc_exact_match'], global_step=global_step)
         model.train()
         # ---------------------------------------------------------------------------------- #
-
-        
         best_state = {
             'epoch': epoch,
             'model_state_dict': model.state_dict(),

@@ -115,6 +115,7 @@ def train_epoch(model: LayoutLMForMaskedLM, train_dataloader: DataLoader,
 
 
 def eval(model: LayoutLMForMaskedLM, 
+         tokenizer: AutoTokenizer,
          eval_dataloader: DataLoader,
          device: torch.device, 
          pad_token_label_id: int, 
@@ -141,7 +142,7 @@ def eval(model: LayoutLMForMaskedLM,
     """
 
     # If needed, adjust the mask_token_id for other models (i.e: LayoutLMV3)
-    mask_token_id = AutoTokenizer.from_pretrained("microsoft/layoutlm-base-uncased").mask_token_id
+    mask_token_id = tokenizer.mask_token_id
     loss = 0.0
     nb_eval_steps = 0
     preds: np.ndarray = np.array([])

@@ -42,8 +42,10 @@ class LayoutLMDataPreparationMVLM(LayoutLMDataPreparation):
         self.config_path = config_path
         with open(self.config_path, 'r', encoding='utf-8') as config_file:
             self.config = json.load(config_file)
+        # MODIFY TO TAKE THE PROCESSOR AS AN ARGUMENT
         self.processor = AutoProcessor.from_pretrained(
             "microsoft/layoutlmv2-base-uncased", apply_ocr=False)
+        # MODIFY TO TAKE THE TOKENIZER AS AN ARGUMENT
         self.tokenizer = AutoTokenizer.from_pretrained(os.path.join(self.config.get('model_dir'),
                                                                     "microsoft/layoutlm-base-uncased")
                                                                     )

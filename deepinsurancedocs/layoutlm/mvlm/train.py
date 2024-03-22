@@ -199,11 +199,12 @@ def main():
     model.eval()
     with torch.no_grad():
         val_results = eval(model, 
-                            val_dataloader, 
-                            device, 
-                            pad_token_label_id,
-                            logging=logging, 
-                            print_results=True)
+                           tokenizer,
+                           val_dataloader, 
+                           device, 
+                           pad_token_label_id,
+                           logging=logging, 
+                           print_results=True)
 
         csv_data['val']['step'].append(global_step)
         csv_data['val']['loss'].append(float(val_results["loss"]))
@@ -229,12 +230,12 @@ def main():
         model.eval()
         with torch.no_grad():
             val_results = eval(model, 
-                             val_dataloader, 
-                             device, 
-                             pad_token_label_id,
-                            #  idx2label, 
-                             logging=logging, 
-                             print_results=True)
+                               tokenizer,
+                               val_dataloader, 
+                               device, 
+                               pad_token_label_id,
+                               logging=logging, 
+                               print_results=True)
 
         csv_data['val']['step'].append(global_step)
         csv_data['val']['loss'].append(float(val_results["loss"]))

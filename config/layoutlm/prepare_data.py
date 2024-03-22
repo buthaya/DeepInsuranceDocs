@@ -26,12 +26,12 @@ class CustomDataset(Dataset):
         subdict = super().__getitem__(idx)
         return list(subdict.values())
 
-
 class LayoutLMDataPreparation:
     def __init__(self, config_path: str):
         self.config_path = config_path
         with open(self.config_path, 'r', encoding='utf-8') as config_file:
             self.config = json.load(config_file)
+        # MODIFY TO TAKE THE PROCESSOR AS AN ARGUMENT
         self.processor = AutoProcessor.from_pretrained(os.path.join(self.config['model_dir'],"microsoft/layoutlm-base-uncased")
                                                        , apply_ocr=False)
         self.features = Features({
