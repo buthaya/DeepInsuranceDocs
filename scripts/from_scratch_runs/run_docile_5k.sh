@@ -3,9 +3,8 @@
 #SBATCH --output=out_%j.txt
 #SBATCH --error=err_%j.txt
 #SBATCH --constraint v100-32g
-#SBATCH --hint=multithread 
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=20
+#SBATCH --cpus-per-task=10
 #SBATCH --time=10:00:00
 #SBATCH -A zke@v100
 
@@ -28,7 +27,8 @@ GRADIENT_ACCUMULATION_STEPS=0
 MVLM_CONFIG_PATH=experiments/from_scratch_mvlm_docile_5k.json
 
 # set -x
-
+echo "-------- RUNNING MVLM DOCILE 5K FROM SCRATCH ----------"
+echo "-------------- GOT THE FOLLOWING PARAMS: --------------"
 echo "MVLM_DATASET: $MVLM_DATASET"
 echo "TOKEN_CLASSIF_DATASET: $TOKEN_CLASSIF_DATASET"
 echo "SUBSET_INDEX_PATH: $SUBSET_INDEX_PATH"
