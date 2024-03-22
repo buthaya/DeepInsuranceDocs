@@ -36,7 +36,7 @@ which python
 # Setup
 EXPERIMENT_DIR=experiments/pretrain_$MVLM_DATASET/tc_$TOKEN_CLASSIF_DATASET
 MVLM_SAVE_DIR=experiments/pretrain_$MVLM_DATASET
-MVLM_TRAIN_DATA_PATH=data/docile/$MVLM_DATASET
+MVLM_TRAIN_DATA_PATH=data/$MVLM_DATASET
 MVLM_VAL_DATA_PATH=data/$MVLM_VAL_DATASET
 mkdir -p $EXPERIMENT_DIR
 mkdir -p $MVLM_SAVE_DIR
@@ -46,7 +46,7 @@ export EXPERIMENT_DIR=$EXPERIMENT_DIR
 export MVLM_DATASET=$MVLM_DATASET
 export MVLM_TRAIN_DATA_PATH=$MVLM_TRAIN_DATA_PATH
 export MVLM_VAL_DATA_PATH=$MVLM_VAL_DATA_PATH
-
+export SUBSET_INDEX_PATH=$SUBSET_INDEX_PATH
 export TOKEN_CLASSIF_DATASET=$TOKEN_CLASSIF_DATASET
 export HOME_DIR=$HOME_DIR
 export HF_MODEL_DIR=$HF_MODEL_DIR
@@ -59,9 +59,23 @@ export LEARNING_RATE=$LEARNING_RATE
 export GRADIENT_ACCUMULATION_STEPS=$GRADIENT_ACCUMULATION_STEPS
 export MVLM_CONFIG_PATH=$MVLM_CONFIG_PATH
 
+echo "-------------- GOT THE FOLLOWING PARAMS: --------------"
+echo "MVLM_TRAIN_DATA_PATH: $MVLM_TRAIN_DATA_PATH"
+echo "MVLM_VAL_DATA_PATH: $MVLM_VAL_DATA_PATH"
+echo "TOKEN_CLASSIF_DATASET: $TOKEN_CLASSIF_DATASET"
+echo "SUBSET_INDEX_PATH: $SUBSET_INDEX_PATH"
+echo "HOME_DIR: $HOME_DIR"
+echo "HF_MODEL_DIR: $HF_MODEL_DIR"
+echo "PRETRAINED_MODEL: $PRETRAINED_MODEL"
+echo "PREPROCESS_NORMALIZE_TXT: $PREPROCESS_NORMALIZE_TXT"
+echo "PREPROCESS_TAG_SCHEME: $PREPROCESS_TAG_SCHEME"
+echo "EPOCH_NUM: $EPOCH_NUM"
+echo "BATCH_SIZE: $BATCH_SIZE"
+echo "LEARNING_RATE: $LEARNING_RATE"
+echo "GRADIENT_ACCUMULATION_STEPS: $GRADIENT_ACCUMULATION_STEPS"
+
 # 1. Proceed with Unsupervised MVLM on LayoutLM model. Resulting model will be saved in 
 echo "------------------- RUNNING MVLM ----------------------"
-echo "-------------- GOT THE FOLLOWING PARAMS: --------------"
 echo Running MVLM, check at $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
 
 # # 2. Extract the folder where the trained model has been saved
@@ -71,6 +85,7 @@ python deepinsurancedocs/layoutlm/mvlm/train.py \
     --train_data_dir $MVLM_TRAIN_DATA_PATH \
     --is_docile $IS_DOCILE \
     --validation_data_dir $MVLM_VAL_DATA_PATH \
+    --subset_index_path $SUBSET_INDEX_PATH \
     --pretrained_model $PRETRAINED_MODEL \
     --batch_size $BATCH_SIZE \
     --learning_rate $LEARNING_RATE \

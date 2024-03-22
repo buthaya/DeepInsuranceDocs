@@ -43,6 +43,8 @@ def main():
                         help='Whether the dataset is docile or not')
     parser.add_argument('--validation_data_dir', type=str, required=True, 
                         help='Path to the validation data')
+    parser.add_argument('--subset_index_path', type=str, required=True,
+                        help='Path to the index of the subset we are using (e.g: data/docile/docile_5k/list_pages.json)')
     parser.add_argument('--pretrained_model', type=str, required=True, 
                         help='Path to the pretrained model. If "null", no pretrained model.')
     parser.add_argument('--batch_size', type=int, required=True, 
@@ -66,6 +68,7 @@ def main():
     TRAIN_DATA_NAME = TRAIN_DATA_DIR.split('/')[-1]
     IS_DOCILE = args.is_docile
     assert TRAIN_DATA_NAME != ''
+    SUBSET_INDEX_PATH = args.subset_index_path
     # Validation args
     VAL_DATA_DIR = args.validation_data_dir
     VAL_DATA_NAME = VAL_DATA_DIR.split('/')[-1]
@@ -111,7 +114,6 @@ def main():
     # Open path containing the index of train data
     with open(os.path.join(TRAIN_DATA_DIR, 'label_list.json'), 'r', encoding='utf-8') as f:
         label_dict = json.load(f)
-    subset_index_path = os.path.join(TRAIN_DATA_DIR,'list_pages.json')
 
     # -------------------------------------------------------------------------------------------- #
     #                                           Tokenizer                                          #
@@ -145,7 +147,7 @@ def main():
 
     print('Loading MVLM Train Dataset...')
     train_dataset = LayoutLMDocileDataset(TRAIN_DATA_DIR, # Path to the index of the subset we are using
-                                          subset_index_path,
+                                          SUBSET_INDEX_PATH,
                                           tokenizer, 
                                           label_list, 
                                           pad_token_label_id, 
