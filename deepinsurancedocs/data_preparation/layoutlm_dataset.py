@@ -294,7 +294,9 @@ def convert_examples_to_features_multi_threaded(examples, label_list, max_seq_le
                                             cls_token_box=[0, 0, 0, 0], sep_token_box=[1000, 1000, 1000, 1000],
                                             pad_token_box=[0, 0, 0, 0], pad_token_segment_id=0,
                                             pad_token_label_id=-1, sequence_a_segment_id=0,
-                                            mask_padding_with_zero=True, tagging_scheme=None, num_threads=4):
+                                            mask_padding_with_zero=True, tagging_scheme=None,
+                                            # num_threads=4
+                                            ):
 
     label_map = {label: i for i, label in enumerate(label_list)}
 
@@ -306,7 +308,8 @@ def convert_examples_to_features_multi_threaded(examples, label_list, max_seq_le
                                         mask_padding_with_zero, tagging_scheme)
 
     features = []
-    with ThreadPoolExecutor(max_workers=num_threads) as executor:
+    # with ThreadPoolExecutor(max_workers=num_threads) as executor:
+    with ThreadPoolExecutor() as executor:
         for result in tqdm(executor.map(process_example, examples), total=len(examples), desc='Converting examples to features'):
             features.append(result)
 
