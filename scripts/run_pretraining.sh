@@ -96,7 +96,7 @@ python deepinsurancedocs/layoutlm/mvlm/train.py \
     --train_data_dir $MVLM_TRAIN_DATA_PATH \
     --is_docile $IS_DOCILE \
     --validation_data_dir $MVLM_VAL_DATA_PATH \
-    --pretrained_model $PRETRAINED_MODEL \
+    # --pretrained_model $PRETRAINED_MODEL \
     --batch_size $BATCH_SIZE \
     --learning_rate $LEARNING_RATE \
     --epoch_num $EPOCH_NUM \
