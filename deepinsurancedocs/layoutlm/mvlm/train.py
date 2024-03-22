@@ -83,19 +83,19 @@ def main():
     # Output directory arg
     SAVE_MODEL_PATH = args.output_dir
 
-    print(f"TRAIN_DATA_DIR: {TRAIN_DATA_DIR}")
-    print(f"TRAIN_DATA_NAME: {TRAIN_DATA_NAME}")
-    print(f"IS_DOCILE: {IS_DOCILE}")
-    print(f"VAL_DATA_DIR: {VAL_DATA_DIR}")
-    print(f"VAL_DATA_NAME: {VAL_DATA_NAME}")
-    print(f"PRETRAINED_MODEL: {PRETRAINED_MODEL}")
-    print(f"BATCH_SIZE: {BATCH_SIZE}")
-    print(f"LEARNING_RATE: {LEARNING_RATE}")
-    print(f"NUM_TRAIN_EPOCHS: {NUM_TRAIN_EPOCHS}")
-    print(f"ACCUMULATION_STEPS: {ACCUMULATION_STEPS}")
-    print(f"TAGGING_SCHEME: {TAGGING_SCHEME}")
-    print(f"MODEL_DIR: {MODEL_DIR}")
-    print(f"SAVE_MODEL_PATH: {SAVE_MODEL_PATH}")
+    # print(f"TRAIN_DATA_DIR: {TRAIN_DATA_DIR}")
+    # print(f"TRAIN_DATA_NAME: {TRAIN_DATA_NAME}")
+    # print(f"IS_DOCILE: {IS_DOCILE}")
+    # print(f"VAL_DATA_DIR: {VAL_DATA_DIR}")
+    # print(f"VAL_DATA_NAME: {VAL_DATA_NAME}")
+    # print(f"PRETRAINED_MODEL: {PRETRAINED_MODEL}")
+    # print(f"BATCH_SIZE: {BATCH_SIZE}")
+    # print(f"LEARNING_RATE: {LEARNING_RATE}")
+    # print(f"NUM_TRAIN_EPOCHS: {NUM_TRAIN_EPOCHS}")
+    # print(f"ACCUMULATION_STEPS: {ACCUMULATION_STEPS}")
+    # print(f"TAGGING_SCHEME: {TAGGING_SCHEME}")
+    # print(f"MODEL_DIR: {MODEL_DIR}")
+    # print(f"SAVE_MODEL_PATH: {SAVE_MODEL_PATH}")
 
     model_name = "layoutlm_mvlm"
     torch.manual_seed(0)
@@ -122,7 +122,7 @@ def main():
     # -------------------------------------------------------------------------------------------- #
     #                                             Model                                            #
     # -------------------------------------------------------------------------------------------- #
-    if PRETRAINED_MODEL is not "null":
+    if PRETRAINED_MODEL!="null":
         model = LayoutLMForMaskedLMInternal.from_pretrained(os.path.join(MODEL_DIR, PRETRAINED_MODEL))
     else:
         default_config=LayoutLMConfig()
