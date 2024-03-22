@@ -149,8 +149,8 @@ def main():
                                           TAGGING_SCHEME)
 
     print('Loading MVLM Validation Dataset...')
-    val_dataset = LayoutLMDocileDataset(TRAIN_DATA_DIR,
-                                        os.path.join(TRAIN_DATA_DIR, 'list_data_train.json'),
+    val_dataset = LayoutLMDocileDataset(VAL_DATA_DIR,
+                                        os.path.join(VAL_DATA_DIR, 'list_data_train.json'),
                                         tokenizer,
                                         label_list,
                                         pad_token_label_id,
