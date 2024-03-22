@@ -2,10 +2,11 @@
 #SBATCH --job-name=MVLM_docile_5K
 #SBATCH --output=out_%j.txt
 #SBATCH --error=err_%j.txt
+#SBATCH --constraint v100-32g
+#SBATCH --hint=multithread 
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=10 
+#SBATCH --cpus-per-task=10
 #SBATCH --time=10:00:00
-#SBATCH -C v100-32g
 #SBATCH -A zke@v100
 
 MVLM_DATASET=docile_5k
@@ -24,6 +25,22 @@ BATCH_SIZE=10
 LEARNING_RATE=5e-5
 GRADIENT_ACCUMULATION_STEPS=0
 MVLM_CONFIG_PATH=experiments/from_scratch_mvlm_docile_5k.json
+
+set -x
+
+echo "MVLM_DATASET: $MVLM_DATASET"
+echo "TOKEN_CLASSIF_DATASET: $TOKEN_CLASSIF_DATASET"
+echo "SUBSET_INDEX_PATH: $SUBSET_INDEX_PATH"
+echo "HOME_DIR: $HOME_DIR"
+echo "MODEL_NAME: $MODEL_NAME"
+echo "PRETRAINED_MODEL: $PRETRAINED_MODEL"
+echo "PREPROCESS_NORMALIZE_TXT: $PREPROCESS_NORMALIZE_TXT"
+echo "PREPROCESS_TAG_SCHEME: $PREPROCESS_TAG_SCHEME"
+echo "EPOCH_NUM: $EPOCH_NUM"
+echo "BATCH_SIZE: $BATCH_SIZE"
+echo "LEARNING_RATE: $LEARNING_RATE"
+echo "GRADIENT_ACCUMULATION_STEPS: $GRADIENT_ACCUMULATION_STEPS"
+echo "MVLM_CONFIG_PATH: $MVLM_CONFIG_PATH"
 
 # Run MVLM on docile_5k without pretraining
 bash scripts/run_pretraining.sh\
