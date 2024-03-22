@@ -5,7 +5,7 @@
 #SBATCH --constraint v100-32g
 #SBATCH --hint=multithread 
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=10
+#SBATCH --cpus-per-task=20
 #SBATCH --time=10:00:00
 #SBATCH -A zke@v100
 
