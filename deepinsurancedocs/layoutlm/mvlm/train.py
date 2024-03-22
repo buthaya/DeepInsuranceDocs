@@ -43,9 +43,8 @@ def main():
                         help='Whether the dataset is docile or not')
     parser.add_argument('--validation_data_dir', type=str, required=True, 
                         help='Path to the validation data')
-    parser.add_argument('--pretrained_model', required=False, 
-                        default=None,
-                        help='Path to the pretrained model')
+    parser.add_argument('--pretrained_model', type=str, required=True, 
+                        help='Path to the pretrained model. If "null", no pretrained model.')
     parser.add_argument('--batch_size', type=int, required=True, 
                         help='Batch size')
     parser.add_argument('--learning_rate', type=float, required=True, 
@@ -123,7 +122,7 @@ def main():
     # -------------------------------------------------------------------------------------------- #
     #                                             Model                                            #
     # -------------------------------------------------------------------------------------------- #
-    if PRETRAINED_MODEL:
+    if PRETRAINED_MODEL is not "null":
         model = LayoutLMForMaskedLMInternal.from_pretrained(os.path.join(MODEL_DIR, PRETRAINED_MODEL))
     else:
         default_config=LayoutLMConfig()
