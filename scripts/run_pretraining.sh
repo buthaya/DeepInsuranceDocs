@@ -43,7 +43,7 @@ mkdir -p $MVLM_SAVE_DIR
 
 
 # Some prints
-echo GOT THE FOLLOWING PARAMS:
+echo "-------------- GOT THE FOLLOWING PARAMS: --------------"
 echo EXPERIMENT_DIR=$EXPERIMENT_DIR
 # echo MVLM_DATASET=$MVLM_DATASET
 echo MVLM_TRAIN_DATA_PATH=$MVLM_TRAIN_DATA_PATH
@@ -65,8 +65,8 @@ echo BATCH_SIZE=$BATCH_SIZE
 echo LEARNING_RATE=$LEARNING_RATE
 echo GRADIENT_ACCUMULATION_STEPS=$GRADIENT_ACCUMULATION_STEPS
 echo MVLM_CONFIG_PATH=$MVLM_CONFIG_PATH
-
 # Some exports
+
 
 export EXPERIMENT_DIR=$EXPERIMENT_DIR
 export MVLM_DATASET=$MVLM_DATASET
@@ -86,6 +86,7 @@ export GRADIENT_ACCUMULATION_STEPS=$GRADIENT_ACCUMULATION_STEPS
 export MVLM_CONFIG_PATH=$MVLM_CONFIG_PATH
 
 # 1. Proceed with Unsupervised MVLM on LayoutLM model. Resulting model will be saved in 
+echo "-------------- RUNNING MVLM --------------"
 echo Running MVLM, check at $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
 
 # # 2. Extract the folder where the trained model has been saved
