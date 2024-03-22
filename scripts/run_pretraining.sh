@@ -10,7 +10,7 @@ do
             MVLM_DATASET)                    MVLM_DATASET=${VALUE} ;;
             MVLM_VAL_DATASET)                MVLM_VAL_DATASET=${VALUE} ;;
             TOKEN_CLASSIF_DATASET)           TOKEN_CLASSIF_DATASET=${VALUE} ;;
-            IS_DOCILE                        IS_DOCILE=${VALUE} ;;
+            IS_DOCILE)                       IS_DOCILE=${VALUE} ;;
             SUBSET_INDEX_PATH)               SUBSET_INDEX_PATH=${VALUE} ;;
             HOME_DIR)                        HOME_DIR=${VALUE} ;;
 
