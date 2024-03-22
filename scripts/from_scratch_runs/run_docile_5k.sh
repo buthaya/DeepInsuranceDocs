@@ -10,8 +10,9 @@
 #SBATCH -A zke@v100
 
 MVLM_DATASET=docile_5k
+MVLM_VAL_DATASET=docile
 TOKEN_CLASSIF_DATASET=docile
-# FULL_PIPELINE_BASE_PATH=
+IS_DOCILE=true
 SUBSET_INDEX_PATH=data/docile/subsets_index/5k.json
 HOME_DIR=$SCRATCH/DeepInsuranceDocs  # To adjust
 
@@ -45,7 +46,9 @@ echo "MVLM_CONFIG_PATH: $MVLM_CONFIG_PATH"
 # Run MVLM on docile_5k without pretraining
 bash scripts/run_pretraining.sh\
     MVLM_DATASET=$MVLM_DATASET\
+    MVLM_VAL_DATASET=$MVLM_VAL_DATASET\
     TOKEN_CLASSIF_DATASET=$TOKEN_CLASSIF_DATASET\
+    IS_DOCILE=$IS_DOCILE\
     SUBSET_INDEX_PATH=$SUBSET_INDEX_PATH\
     HOME_DIR=$HOME_DIR\
     MODEL_NAME=$MODEL_NAME\

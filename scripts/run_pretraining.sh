@@ -8,7 +8,9 @@ do
     VALUE=$(echo $ARGUMENT | cut -f2 -d=)   
     case "$KEY" in
             MVLM_DATASET)                    MVLM_DATASET=${VALUE} ;;
+            MVLM_VAL_DATASET)                MVLM_VAL_DATASET=${VALUE} ;;
             TOKEN_CLASSIF_DATASET)           TOKEN_CLASSIF_DATASET=${VALUE} ;;
+            IS_DOCILE                        IS_DOCILE=${VALUE} ;;
             SUBSET_INDEX_PATH)               SUBSET_INDEX_PATH=${VALUE} ;;
             HOME_DIR)                        HOME_DIR=${VALUE} ;;
 
@@ -34,6 +36,7 @@ which python
 # Setup
 EXPERIMENT_DIR=experiments/pretrain_$MVLM_DATASET/tc_$TOKEN_CLASSIF_DATASET
 MVLM_SAVE_DIR=experiments/pretrain_$MVLM_DATASET
+MVLM_TRAIN_DATA=data/$MVLM_DATASET
 
 mkdir -p $EXPERIMENT_DIR
 mkdir -p $MVLM_SAVE_DIR
@@ -43,6 +46,10 @@ mkdir -p $MVLM_SAVE_DIR
 echo GOT THE FOLLOWING PARAMS:
 echo EXPERIMENT_DIR=$EXPERIMENT_DIR
 echo MVLM_DATASET=$MVLM_DATASET
+echo MVLM_TRAIN_DATA=$MVLM_TRAIN_DATA
+echo MVLM_VAL_DATASET=$MVLM_VAL_DATASET
+echo IS_DOCILE=$IS_DOCILE
+
 echo TOKEN_CLASSIF_DATASET=$TOKEN_CLASSIF_DATASET
 echo SUBSET_INDEX_PATH=$SUBSET_INDEX_PATH
 echo HOME_DIR=$HOME_DIR
@@ -62,8 +69,10 @@ echo MVLM_CONFIG_PATH=$MVLM_CONFIG_PATH
 
 export EXPERIMENT_DIR=$EXPERIMENT_DIR
 export MVLM_DATASET=$MVLM_DATASET
+export MVLM_TRAIN_DATA=$MVLM_TRAIN_DATA
+export MVLM_VAL_DATASET=$MVLM_VAL_DATASET
+
 export TOKEN_CLASSIF_DATASET=$TOKEN_CLASSIF_DATASET
-# export FULL_PIPELINE_BASE_PATH=$FULL_PIPELINE_BASE_PATH
 export HOME_DIR=$HOME_DIR
 export MODEL_NAME=$MODEL_NAME
 export PRETRAINED_MODEL=$PRETRAINED_MODEL
@@ -78,10 +87,20 @@ export MVLM_CONFIG_PATH=$MVLM_CONFIG_PATH
 # 1. Proceed with Unsupervised MVLM on LayoutLM model. Resulting model will be saved in 
 echo Running MVLM, check at $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out
 
-
 # # 2. Extract the folder where the trained model has been saved
 #### After MVLM, model will be saved in experiments/PRETRAIN_${MVLM_DATASET}/
 
-python deepinsurancedocs/layoutlm/mvlm/train.py --config_path "$MVLM_CONFIG_PATH" --output_dir $MVLM_SAVE_DIR > $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out 2>&1 
+python deepinsurancedocs/layoutlm/mvlm/train.py \
+    --train_data_dir $MVLM_TRAIN_DATA \
+    --is_docile $IS_DOCILE \
+    --validation_data_dir $MVLM_VAL_DATASET \
+    --pretrained_model $PRETRAINED_MODEL \
+    --batch_size $BATCH_SIZE \
+    --learning_rate $LEARNING_RATE \
+    --epoch_num $EPOCH_NUM \
+    --gradient_accumulation_steps $GRADIENT_ACCUMULATION_STEPS \
+    --tagging_scheme $PREPROCESS_TAG_SCHEME \
+    --model_dir $MODEL_NAME \
+    --output_dir $MVLM_SAVE_DIR > $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out 2>&1 
 
 cat $MVLM_SAVE_DIR/pretrain_${MVLM_DATASET}.out

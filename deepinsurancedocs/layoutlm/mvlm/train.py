@@ -37,16 +37,65 @@ def main():
     #                                         Training args                                        #
     # -------------------------------------------------------------------------------------------- #
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config_path', type=str)
-    parser.add_argument('--output_dir', type=str)
-
+    parser.add_argument('--train_data_dir', type=str, required=True, 
+                        help='Path to the training data')
+    parser.add_argument('--is_docile', type=bool, required=True, 
+                        help='Whether the dataset is docile or not')
+    parser.add_argument('--validation_data_dir', type=str, required=True, 
+                        help='Path to the validation data')
+    parser.add_argument('--pretrained_model', type=str, required=True, 
+                        help='Path to the pretrained model')
+    parser.add_argument('--batch_size', type=int, required=True, 
+                        help='Batch size')
+    parser.add_argument('--learning_rate', type=float, required=True, 
+                        help='Learning rate')
+    parser.add_argument('--epoch_num', type=int, required=True, 
+                        help='Number of training epochs')
+    parser.add_argument('--gradient_accumulation_steps', type=int, required=True, 
+                        help='Gradient accumulation steps')
+    parser.add_argument('--tagging_scheme', type=str, required=True, 
+                        help='Tagging scheme (e.g. BIO, BIOES)')
+    parser.add_argument('--model_dir', type=str, required=True, 
+                        help='Path to the directory containing the huggingface models. Used for training on a cluster with restricted network')
+    parser.add_argument('--output_dir', type=str, required=True, 
+                        help='Path to the directory where the model will be saved')
+    
     args = parser.parse_args()
-
-    config_path = args.config_path
+    # Training args
+    TRAIN_DATA_DIR = args.data_dir
+    TRAIN_DATA_NAME = TRAIN_DATA_DIR.split('/')[-1]
+    IS_DOCILE = args.is_docile
+    assert TRAIN_DATA_NAME != ''
+    # Validation args
+    VAL_DATA_DIR = args.validation_data_dir
+    VAL_DATA_NAME = VAL_DATA_DIR.split('/')[-1]
+    assert VAL_DATA_NAME != ''
+    # Model args
+    PRETRAINED_MODEL = args.pretrained_model
+    BATCH_SIZE = args.batch_size
+    LEARNING_RATE = args.learning_rate
+    NUM_TRAIN_EPOCHS = args.epoch_num
+    ACCUMULATION_STEPS = args.gradient_accumulation_steps
+    # Tagging scheme args
+    TAGGING_SCHEME = args.tagging_scheme
+    # huggingface model location arg
+    MODEL_DIR = args.model_dir
+    # Output directory arg
     SAVE_MODEL_PATH = args.output_dir
 
-    # Debug parameters
-    # config_path = 'config/mvlm_docile_5k.json'
+    print(f"TRAIN_DATA_DIR: {TRAIN_DATA_DIR}")
+    print(f"TRAIN_DATA_NAME: {TRAIN_DATA_NAME}")
+    print(f"IS_DOCILE: {IS_DOCILE}")
+    print(f"VAL_DATA_DIR: {VAL_DATA_DIR}")
+    print(f"VAL_DATA_NAME: {VAL_DATA_NAME}")
+    print(f"PRETRAINED_MODEL: {PRETRAINED_MODEL}")
+    print(f"BATCH_SIZE: {BATCH_SIZE}")
+    print(f"LEARNING_RATE: {LEARNING_RATE}")
+    print(f"NUM_TRAIN_EPOCHS: {NUM_TRAIN_EPOCHS}")
+    print(f"ACCUMULATION_STEPS: {ACCUMULATION_STEPS}")
+    print(f"TAGGING_SCHEME: {TAGGING_SCHEME}")
+    print(f"MODEL_DIR: {MODEL_DIR}")
+    print(f"SAVE_MODEL_PATH: {SAVE_MODEL_PATH}")
 
     model_name = "layoutlm_mvlm"
     torch.manual_seed(0)
@@ -55,49 +104,17 @@ def main():
     # Use cross entropy ignore index as padding label id so that only real label ids contribute to the loss later
     pad_token_label_id = CrossEntropyLoss().ignore_index
 
-    # -------------------------------------------------------------------------------------------- #
-    #                        Open Config with dataset & training information                       #
-    # -------------------------------------------------------------------------------------------- #
-    
-    # config_path="/mnt/config/mvlm_docile_5k.json"
-    # print(f"CAREFUL !!! DEBUG MODE USING {config_path}")
-    
-    with open(config_path, 'r', encoding='utf-8') as f:
-        # config is a dict to store the following information about the dataset:
-        # - data_dir: path to the directory containing the dataset
-        # - input_format: format of the input data
-        # - preprocessing: dictionary containing the tagging scheme used for preprocessing
-        # - label_list: dictionary containing the mapping of labels to their corresponding indices
-        config = json.load(f)
-    DATA_DIR = config.get('data_dir', None)
-    # IS_DOCILE = config.get('is_docile', False)
-    VAL_DATA_DIR = config.get('validation_data_dir')
-    VAL_DATA_NAME = VAL_DATA_DIR.split('/')[-1]
-    assert VAL_DATA_NAME != ''
-    DATASET_NAME = config.get('dataset_name', 'no_dataset_name') # delete .json extension
-    PRETRAINED_MODEL = config.get('pretrained_model', '')
-    CHECKPOINT_PATH = config.get('checkpoint_path', None)
-    BATCH_SIZE = config['training_parameters'].get('batch_size', 1)
-    LEARNING_RATE = config['training_parameters'].get('learning_rate', 0.001)
-    NUM_TRAIN_EPOCHS = config['training_parameters'].get('epoch_num', 1)
-    LOCAL_FILES_ONLY = config.get('is_local_model', False)
-    ACCUMULATION_STEPS = config['training_parameters'].get('gradient_accumulation_steps', 1)
-    TAGGING_SCHEME = config['preprocessing'].get('tagging_scheme', None)
-    MODEL_DIR = config.get('model_dir', None)
-    
-    # Open os.path.join(DATA_DIR, 'label_list.json')
-    with open(os.path.join(DATA_DIR, 'label_list.json'), 'r', encoding='utf-8') as f:
+    # Open path containing the index of train data
+    with open(os.path.join(TRAIN_DATA_DIR, 'label_list.json'), 'r', encoding='utf-8') as f:
         label_dict = json.load(f)
-    subset_index_path = os.path.join(DATA_DIR, DATASET_NAME,'list_pages.json')
-
-    print(config['training_parameters'])
+    subset_index_path = os.path.join(TRAIN_DATA_DIR,'list_pages.json')
 
     # -------------------------------------------------------------------------------------------- #
     #                                           Tokenizer                                          #
     # -------------------------------------------------------------------------------------------- #
     tokenizer = LayoutLMTokenizer.from_pretrained(os.path.join(MODEL_DIR, "microsoft/layoutlm-base-uncased"))
     idx2label = label_dict_transform(label_dict=label_dict, 
-                                     scheme=config['preprocessing']['tagging_scheme'])
+                                     scheme=TAGGING_SCHEME)
     label2idx = {label: idx for idx, label in idx2label.items()}
     label_list = list(idx2label.values())
     num_labels = len(label_list)
@@ -123,7 +140,7 @@ def main():
     print('Loading Docile Unlabeled Dataset...')
 
     print('Loading MVLM Train Dataset...')
-    train_dataset = LayoutLMDocileDataset(DATA_DIR, # Path to the index of the subset we are using
+    train_dataset = LayoutLMDocileDataset(TRAIN_DATA_DIR, # Path to the index of the subset we are using
                                           subset_index_path,
                                           tokenizer, 
                                           label_list, 
@@ -132,8 +149,8 @@ def main():
                                           TAGGING_SCHEME)
 
     print('Loading MVLM Validation Dataset...')
-    val_dataset = LayoutLMDocileDataset(DATA_DIR,
-                                        os.path.join(DATA_DIR, 'list_data_train.json'),
+    val_dataset = LayoutLMDocileDataset(TRAIN_DATA_DIR,
+                                        os.path.join(TRAIN_DATA_DIR, 'list_data_train.json'),
                                         tokenizer,
                                         label_list,
                                         pad_token_label_id,
@@ -165,7 +182,7 @@ def main():
     # -------------------------------------------------------------------------------------------- #
     if not os.path.exists(SAVE_MODEL_PATH + '/logs/'):
         os.makedirs(SAVE_MODEL_PATH + '/logs/')
-    log_file = f'train_{model_name}_{DATASET_NAME}.log'
+    log_file = f'train_{model_name}_{TRAIN_DATA_NAME}.log'
     logging.basicConfig(filename=SAVE_MODEL_PATH + '/logs/' + log_file,
                         level=logging.INFO)
     logging.info('Training settings')

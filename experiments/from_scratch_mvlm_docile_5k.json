@@ -1,21 +1,21 @@
-{
-    "data_dir": "data/docile",
-    "dataset_name": "docile_5k",
-    "is_docile": true,
-    "validation_data_dir": "/domino/datasets/local/DeepInsuranceDocs/docile",
-    "docile_data_dir": "/domino/datasets/docile/data/docile/",
-    "input_format": "text_and_boxes",
-    "model_dir": "models/huggingface/",
-    "pretrained_model": null,
-    "preprocessing": {
-        "normalize_text": true,
-        "image_resize": [224, 224],
-        "tagging_scheme": "BIO"
-    },
-    "training_parameters":{
-        "epoch_num" : 5,
-        "batch_size" : 8,
-        "learning_rate": 5e-5,
-        "gradient_accumulation_steps": 10
-    }
-}
+// {
+//     // "data_dir": "data/docile",
+//     // "dataset_name": "docile_5k",
+//     // "is_docile": true,
+//     "validation_data_dir": "/data/docile",
+//     "docile_data_dir": "/domino/datasets/docile/data/docile/",
+//     "input_format": "text_and_boxes",
+//     "model_dir": "models/huggingface/",
+//     "pretrained_model": null,
+//     "preprocessing": {
+//         "normalize_text": true,
+//         "image_resize": [224, 224],
+//         "tagging_scheme": "BIO"
+//     },
+//     "training_parameters":{
+//         // "epoch_num" : 5,
+//         // "batch_size" : 8,
+//         // "learning_rate": 5e-5,
+//         // "gradient_accumulation_steps": 0
+//     }
+// }
