@@ -43,7 +43,7 @@ def main():
                         help='Whether the dataset is docile or not')
     parser.add_argument('--validation_data_dir', type=str, required=True, 
                         help='Path to the validation data')
-    parser.add_argument('--pretrained_model', type=str, required=True, 
+    parser.add_argument('--pretrained_model', type=str, required=False, 
                         help='Path to the pretrained model')
     parser.add_argument('--batch_size', type=int, required=True, 
                         help='Batch size')
