@@ -53,7 +53,9 @@ class LayoutLMDocileDataset(Dataset):
         # If docile, index must match doc+page index
         example_str = self.docile_list_data[index]
         document_index, page_index = self.docile_list_data[index].replace('.json','').split('_')
-        
+        import psutil
+        memory_usage = psutil.virtual_memory()
+        print(f"Memory Usage: {memory_usage.percent}%")
         page_index = int(page_index)
         print(f'page_index: {page_index}')
         docile_document = Document(docid=document_index,
