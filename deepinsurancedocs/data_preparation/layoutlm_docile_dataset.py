@@ -49,17 +49,20 @@ class LayoutLMDocileDataset(Dataset):
         return len(self.docile_list_data)
 
     def __getitem__(self, index):
+        print(f'getting item n° {index}')
         # If docile, index must match doc+page index
         example_str = self.docile_list_data[index]
         document_index, page_index = self.docile_list_data[index].replace('.json','').split('_')
         
         page_index = int(page_index)
+        print(f'page_index: {page_index}')
         docile_document = Document(docid=document_index,
                                     dataset_path=self.docile_dir,
                                     load_annotations=False,
                                     load_ocr=False,
                                     cache_images=CachingConfig.OFF,
                                 )
+        print(f'docile_document: {docile_document}')
         docile_page_ocr_data = docile_document.ocr.get_all_words(page_index, snapped=False)
         page_width, page_height = docile_document.annotation.page_image_size_at_200dpi(page_index)
 
