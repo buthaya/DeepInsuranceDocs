@@ -44,6 +44,7 @@ def main():
     parser.add_argument('--validation_data_dir', type=str, required=True, 
                         help='Path to the validation data')
     parser.add_argument('--pretrained_model', required=False, 
+                        default=None,
                         help='Path to the pretrained model')
     parser.add_argument('--batch_size', type=int, required=True, 
                         help='Batch size')
