@@ -36,8 +36,15 @@ which python
 # Setup
 EXPERIMENT_DIR=experiments/pretrain_$MVLM_DATASET/tc_$TOKEN_CLASSIF_DATASET
 MVLM_SAVE_DIR=experiments/pretrain_$MVLM_DATASET
-MVLM_TRAIN_DATA_PATH=data/$MVLM_DATASET
-MVLM_VAL_DATA_PATH=data/$MVLM_VAL_DATASET
+
+if [ "$IS_DOCILE" = true ] ; then
+    MVLM_TRAIN_DATA_PATH=data/docile/data/$MVLM_DATASET
+    MVLM_VAL_DATA_PATH=data/docile/data/$MVLM_VAL_DATASET
+else
+    MVLM_TRAIN_DATA_PATH=data/$MVLM_DATASET
+    MVLM_VAL_DATA_PATH=data/$MVLM_VAL_DATASET
+fi
+
 mkdir -p $EXPERIMENT_DIR
 mkdir -p $MVLM_SAVE_DIR
 
