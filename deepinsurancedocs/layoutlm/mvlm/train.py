@@ -97,6 +97,10 @@ def main():
     # print(f"MODEL_DIR: {MODEL_DIR}")
     # print(f"SAVE_MODEL_PATH: {SAVE_MODEL_PATH}")
 
+    import psutil
+    memory_usage = psutil.virtual_memory()
+    print(f"Memory Usage: {memory_usage.percent}%")
+    
     model_name = "layoutlm_mvlm"
     torch.manual_seed(0)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
