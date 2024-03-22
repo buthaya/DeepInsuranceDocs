@@ -1,3 +1,13 @@
+#!/bin/bash
+#SBATCH --job-name=MVLM_docile_5K
+#SBATCH --output=out_%j.txt
+#SBATCH --error=err_%j.txt
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=10 
+#SBATCH --time=10:00:00
+#SBATCH -C v100-32g
+#SBATCH -A zke@v100
+
 MVLM_DATASET=docile_5k
 TOKEN_CLASSIF_DATASET=docile
 # FULL_PIPELINE_BASE_PATH=
