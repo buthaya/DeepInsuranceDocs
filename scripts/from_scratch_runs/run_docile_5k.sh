@@ -27,7 +27,7 @@ LEARNING_RATE=5e-5
 GRADIENT_ACCUMULATION_STEPS=0
 MVLM_CONFIG_PATH=experiments/from_scratch_mvlm_docile_5k.json
 
-set -x
+# set -x
 
 echo "MVLM_DATASET: $MVLM_DATASET"
 echo "TOKEN_CLASSIF_DATASET: $TOKEN_CLASSIF_DATASET"
