@@ -27,9 +27,7 @@ from docile.dataset import CachingConfig, Dataset, Document
 
 from deepinsurancedocs.data_preparation.data_utils import label_dict_transform  # nopep8
 from deepinsurancedocs.data_preparation.layoutlm_docile_dataset import LayoutLMDocileDataset  # nopep8
-from deepinsurancedocs.data_preparation.layoutlm_dataset import LayoutLMDataset  # nopep8
-from deepinsurancedocs.layoutlm.token_classif.train import train_token_classifier  # nopep8
-from models.layoutlm_mvlm.prepare_data import LayoutLMDataPreparationMVLM  # nopep8
+# from deepinsurancedocs.layoutlm.token_classif.train import train_token_classifier  # nopep8
 from models.layoutlm_mvlm.train_utils import eval, train_epoch, layoutlm_collate_fn  # nopep8
 from models.layoutlm_mvlm.model import LayoutLMForMaskedLMInternal
 
