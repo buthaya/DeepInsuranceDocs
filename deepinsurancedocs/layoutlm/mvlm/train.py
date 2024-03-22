@@ -62,7 +62,7 @@ def main():
     
     args = parser.parse_args()
     # Training args
-    TRAIN_DATA_DIR = args.data_dir
+    TRAIN_DATA_DIR = args.train_data_dir
     TRAIN_DATA_NAME = TRAIN_DATA_DIR.split('/')[-1]
     IS_DOCILE = args.is_docile
     assert TRAIN_DATA_NAME != ''
